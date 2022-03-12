@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/kotaoue/chiken/pkg/blueprint"
+	"github.com/kotaoue/chiken/pkg/palette"
 )
 
 var (
@@ -27,16 +28,15 @@ func main() {
 }
 
 func Main() error {
-	return Output()
+	return output()
 }
-
-func Output() error {
+func output() error {
 	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{*size, *size}})
 
 	drawBG(img, color.RGBA{255, 255, 255, 255})
 	drawImage(img)
 
-	f, err := os.Create("ohyeah.png")
+	f, err := os.Create("img/basic.png")
 	if err != nil {
 		return err
 	}
@@ -53,21 +53,7 @@ func drawBG(img *image.RGBA, col color.RGBA) {
 }
 
 func drawImage(img *image.RGBA) {
-	bp := &blueprint.Blueprint{}
-	tpl := bp.Get(blueprint.BasicStyle)
-
-	cols := []color.RGBA{
-		{0, 0, 0, 0},         // 背景色
-		{0, 0, 0, 255},       // 主線
-		{255, 255, 255, 255}, // メインカラー
-		{128, 128, 128, 255}, // メインカラー 影
-		{255, 0, 0, 255},     // トサカ
-		{255, 128, 128, 255}, // トサカ ハイライト
-		{128, 0, 0, 255},     // トサカ 影
-		{255, 255, 0, 255},   // くちばし
-		{255, 255, 255, 255}, // くちばし ハイライト
-		{255, 255, 0, 255},   // 足
-	}
+	tpl, cols := prepare()
 
 	for y := 0; y < *size; y++ {
 		fmt.Print("{")
@@ -79,4 +65,11 @@ func drawImage(img *image.RGBA) {
 		}
 		fmt.Println("}")
 	}
+}
+
+func prepare() ([][]int, []color.RGBA) {
+	bp := &blueprint.Blueprint{}
+	plt := &palette.Palette{}
+
+	return bp.Get(blueprint.BasicStyle), plt.Get(palette.BasicStyle)
 }

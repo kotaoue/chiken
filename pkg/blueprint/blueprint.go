@@ -7,15 +7,15 @@ const (
 	BasicStyle int = iota
 )
 
-func (*Blueprint) Get(style int) [][]int {
+func (b *Blueprint) Get(style int) [][]int {
 	switch style {
 	case BasicStyle:
-		return basic()
+		return b.basic()
 	}
 	return nil
 }
 
-func basic() [][]int {
+func (b *Blueprint) basic() [][]int {
 	return [][]int{
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
