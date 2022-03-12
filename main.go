@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	size = flag.Int("s", 32, "size of output image")
+	size = flag.Int("s", 32, "size of output image. request multiples of 32")
 )
 
 func init() {
@@ -30,6 +30,7 @@ func main() {
 func Main() error {
 	return output()
 }
+
 func output() error {
 	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{*size, *size}})
 
