@@ -54,7 +54,7 @@ func drawBG(img *image.RGBA, col color.RGBA) {
 }
 
 func drawImage(img *image.RGBA) {
-	tpl, cols := prepare()
+	tpl, cols := fetchBlueprint()
 
 	for y := 0; y < *size; y++ {
 		fmt.Print("{")
@@ -68,7 +68,7 @@ func drawImage(img *image.RGBA) {
 	}
 }
 
-func prepare() ([][]int, []color.RGBA) {
+func fetchBlueprint() ([][]int, []color.RGBA) {
 	bp := &blueprint.Blueprint{}
 	plt := &palette.Palette{}
 
