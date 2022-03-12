@@ -32,8 +32,8 @@ func Main() error {
 
 func Output() error {
 	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{*size, *size}})
-	drawBG(img, color.RGBA{255, 255, 255, 255})
 
+	drawBG(img, color.RGBA{255, 255, 255, 255})
 	drawImage(img)
 
 	f, err := os.Create("ohyeah.png")
@@ -64,15 +64,15 @@ func drawImage(img *image.RGBA) {
 		{255, 0, 0, 255},     // トサカ
 		{255, 128, 128, 255}, // トサカ ハイライト
 		{128, 0, 0, 255},     // トサカ 影
-		{0, 255, 255, 255},   // くちばし
+		{255, 255, 0, 255},   // くちばし
 		{255, 255, 255, 255}, // くちばし ハイライト
-		{0, 255, 255, 255},   // 足
+		{255, 255, 0, 255},   // 足
 	}
 
-	for x := 0; x < *size; x++ {
+	for y := 0; y < *size; y++ {
 		fmt.Print("{")
-		for y := 0; y < *size; y++ {
-			i := tpl[x][y]
+		for x := 0; x < *size; x++ {
+			i := tpl[y][x]
 			fmt.Print(i)
 
 			img.Set(x, y, cols[i])
