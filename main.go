@@ -13,6 +13,7 @@ import (
 )
 
 var (
+	style    = flag.Int("s", 0, "style of rooster")
 	multiple = flag.Int("m", 1, "value to be multiplied by 32")
 	size     int
 	baseSize int
@@ -54,7 +55,8 @@ func output() error {
 
 func fileName() string {
 	dir := "img"
-	name := "basic"
+	plt := &palette.Palette{}
+	name := plt.Name(*style)
 	if *multiple > 1 {
 		return fmt.Sprintf("%s/%s_%d.png", dir, name, *multiple)
 	}
@@ -92,5 +94,5 @@ func fetchBlueprint() ([][]int, []color.RGBA) {
 	bp := &blueprint.Blueprint{}
 	plt := &palette.Palette{}
 
-	return bp.Get(blueprint.BasicStyle), plt.Get(palette.BasicStyle)
+	return bp.Get(blueprint.BasicStyle), plt.Get(*style)
 }

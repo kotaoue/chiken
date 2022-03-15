@@ -13,5 +13,6 @@ go run main.go -m=2
 ## Result
 |style|size|image|
 |---|---|---|
-|basic|32*32|![basic](img/basic.png)|
-|basic|64*64|![basic](img/basic_2.png)|
+|white|32*32|![basic](img/white.png)|
+|white|64*64|![basic](img/white_2.png)|
+|black|32*32|![basic](img/black.png)|
