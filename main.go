@@ -13,11 +13,14 @@ import (
 )
 
 var (
-	size = flag.Int("s", 32, "size of output image. request multiples of 32")
+	multiple = flag.Int("m", 1, "value to be multiplied by 32")
+	size     int
 )
 
 func init() {
 	flag.Parse()
+
+	size = 32 * *multiple
 }
 
 func main() {
@@ -32,7 +35,7 @@ func Main() error {
 }
 
 func output() error {
-	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{*size, *size}})
+	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{size, size}})
 
 	drawBG(img, color.RGBA{255, 255, 255, 255})
 	drawImage(img)
@@ -46,8 +49,8 @@ func output() error {
 }
 
 func drawBG(img *image.RGBA, col color.RGBA) {
-	for x := 0; x < *size; x++ {
-		for y := 0; y < *size; y++ {
+	for x := 0; x < size; x++ {
+		for y := 0; y < size; y++ {
 			img.Set(x, y, col)
 		}
 	}
@@ -56,9 +59,9 @@ func drawBG(img *image.RGBA, col color.RGBA) {
 func drawImage(img *image.RGBA) {
 	tpl, cols := fetchBlueprint()
 
-	for y := 0; y < *size; y++ {
+	for y := 0; y < size; y++ {
 		fmt.Print("{")
-		for x := 0; x < *size; x++ {
+		for x := 0; x < size; x++ {
 			i := tpl[y][x]
 			fmt.Print(i)
 
