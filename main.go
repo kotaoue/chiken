@@ -15,12 +15,14 @@ import (
 var (
 	multiple = flag.Int("m", 1, "value to be multiplied by 32")
 	size     int
+	baseSize int
 )
 
 func init() {
 	flag.Parse()
 
-	size = 32 * *multiple
+	baseSize = 32
+	size = baseSize * *multiple
 }
 
 func main() {
@@ -35,17 +37,28 @@ func Main() error {
 }
 
 func output() error {
+	fmt.Printf("size:%d multiple:%d\n", size, *multiple)
+
 	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{size, size}})
 
 	drawBG(img, color.RGBA{255, 255, 255, 255})
 	drawImage(img)
 
-	f, err := os.Create("img/basic.png")
+	f, err := os.Create(fileName())
 	if err != nil {
 		return err
 	}
 
 	return png.Encode(f, img)
+}
+
+func fileName() string {
+	dir := "img"
+	name := "basic"
+	if *multiple > 1 {
+		return fmt.Sprintf("%s/%s_%d.png", dir, name, *multiple)
+	}
+	return fmt.Sprintf("%s/%s.png", dir, name)
 }
 
 func drawBG(img *image.RGBA, col color.RGBA) {
@@ -59,13 +72,17 @@ func drawBG(img *image.RGBA, col color.RGBA) {
 func drawImage(img *image.RGBA) {
 	tpl, cols := fetchBlueprint()
 
-	for y := 0; y < size; y++ {
+	for y := 0; y < baseSize; y++ {
 		fmt.Print("{")
-		for x := 0; x < size; x++ {
+		for x := 0; x < baseSize; x++ {
 			i := tpl[y][x]
 			fmt.Print(i)
 
-			img.Set(x, y, cols[i])
+			for my := 0; my < *multiple; my++ {
+				for mx := 0; mx < *multiple; mx++ {
+					img.Set(x**multiple+mx, y**multiple+my, cols[i])
+				}
+			}
 		}
 		fmt.Println("}")
 	}
