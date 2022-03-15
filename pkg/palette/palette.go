@@ -1,6 +1,9 @@
 package palette
 
-import "image/color"
+import (
+	"errors"
+	"image/color"
+)
 
 type Palette struct {
 }
@@ -20,14 +23,14 @@ func (p *Palette) Name(style int) string {
 	return ""
 }
 
-func (p *Palette) Get(style int) []color.RGBA {
+func (p *Palette) Get(style int) ([]color.RGBA, error) {
 	switch style {
 	case BasicStyle:
-		return p.basic()
+		return p.basic(), nil
 	case BlackStyle:
-		return p.black()
+		return p.black(), nil
 	}
-	return nil
+	return nil, errors.New("not exist palette")
 }
 
 func (*Palette) basic() []color.RGBA {

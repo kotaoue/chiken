@@ -43,7 +43,9 @@ func output() error {
 	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{size, size}})
 
 	drawBG(img, color.RGBA{255, 255, 255, 255})
-	drawImage(img)
+	if err := drawImage(img); err != nil {
+		return err
+	}
 
 	f, err := os.Create(fileName())
 	if err != nil {
@@ -71,8 +73,11 @@ func drawBG(img *image.RGBA, col color.RGBA) {
 	}
 }
 
-func drawImage(img *image.RGBA) {
-	tpl, cols := fetchBlueprint()
+func drawImage(img *image.RGBA) error {
+	tpl, cols, err := fetchBlueprint()
+	if err != nil {
+		return err
+	}
 
 	for y := 0; y < baseSize; y++ {
 		fmt.Print("{")
@@ -88,11 +93,17 @@ func drawImage(img *image.RGBA) {
 		}
 		fmt.Println("}")
 	}
+
+	return nil
 }
 
-func fetchBlueprint() ([][]int, []color.RGBA) {
+func fetchBlueprint() ([][]int, []color.RGBA, error) {
 	bp := &blueprint.Blueprint{}
-	plt := &palette.Palette{}
+	p := &palette.Palette{}
+	plt, err := p.Get(*style)
+	if err != nil {
+		return nil, nil, err
+	}
 
-	return bp.Get(blueprint.BasicStyle), plt.Get(*style)
+	return bp.Get(blueprint.BasicStyle), plt, nil
 }
