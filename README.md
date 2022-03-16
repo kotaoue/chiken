@@ -8,11 +8,13 @@ go run main.go
 
 # 2 times
 go run main.go -m=2
+go run main.go -b=#ffffff
 ```
 
 ## Result
-|style|size|image|
-|---|---|---|
-|white|32*32|![basic](img/white.png)|
-|white|64*64|![basic](img/white_2.png)|
-|black|32*32|![basic](img/black.png)|
+|style|size|background|image|
+|---|---|---|---|
+|white|32*32|transparent|![basic](img/white.png)|
+|white|64*64|transparent|![basic](img/white_2.png)|
+|black|32*32|transparent|![basic](img/black.png)|
+|white|32*32|#ffffff|![basic](img/white_ffffff.png)|
