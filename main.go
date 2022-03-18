@@ -56,10 +56,18 @@ func Main() error {
 func output(c *color.RGBA) error {
 	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{size, size}})
 
-	p := portrait.NewPortrait(size)
+	p := portrait.NewPortrait(
+		portrait.Options{
+			Size:     size,
+			BaseSize: baseSize,
+			Multiple: *multiple,
+			Style:    *style,
+			Theme:    *theme,
+		},
+	)
 	p.BG(img, c)
 
-	if err := drawImage(img); err != nil {
+	if err := p.Draw(img); err != nil {
 		return err
 	}
 
@@ -85,49 +93,6 @@ func fileName() string {
 		name = fmt.Sprintf("%s_%s", name, strings.ReplaceAll(*background, "#", ""))
 	}
 	return fmt.Sprintf("%s/%s.png", dir, name)
-}
-
-func drawBG(img *image.RGBA, col *color.RGBA) {
-	for x := 0; x < size; x++ {
-		for y := 0; y < size; y++ {
-			img.Set(x, y, col)
-		}
-	}
-}
-
-func drawImage(img *image.RGBA) error {
-	tpl, cols, err := fetchBlueprint()
-	if err != nil {
-		return err
-	}
-
-	for y := 0; y < baseSize; y++ {
-		fmt.Print("{")
-		for x := 0; x < baseSize; x++ {
-			i := tpl[y][x]
-			fmt.Print(i)
-
-			if i != 0 {
-				for my := 0; my < *multiple; my++ {
-					for mx := 0; mx < *multiple; mx++ {
-						img.Set(x**multiple+mx, y**multiple+my, cols[i])
-					}
-				}
-			}
-		}
-		fmt.Println("}")
-	}
-
-	return nil
-}
-
-func fetchBlueprint() ([][]int, []color.RGBA, error) {
-	plt, err := palette.Get(*theme)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	return blueprint.Get(*style), plt, nil
 }
 
 func checkFormat(s string) error {
