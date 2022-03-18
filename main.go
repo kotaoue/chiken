@@ -70,8 +70,7 @@ func output(c *color.RGBA) error {
 
 func fileName() string {
 	dir := "img"
-	plt := &palette.Palette{}
-	name := plt.Name(*theme)
+	name := palette.Name(*theme)
 
 	if *style != blueprint.BasicStyle {
 		name = fmt.Sprintf("%s_%s", name, blueprint.Name(*style))

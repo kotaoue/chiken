@@ -13,7 +13,7 @@ const (
 	BlackStyle
 )
 
-func (p *Palette) Name(style int) string {
+func Name(style int) string {
 	switch style {
 	case BasicStyle:
 		return "white"
