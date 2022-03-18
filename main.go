@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"image"
@@ -17,6 +18,7 @@ var (
 	theme      = flag.Int("t", 0, "theme color of rooster")
 	style      = flag.Int("s", 0, "style of rooster")
 	multiple   = flag.Int("m", 1, "value to be multiplied by 32")
+	format     = flag.String("f", "png", "format of output image")
 	background = flag.String("b", "", "background color. set with hex. example #ffffff. empty is transparent")
 	size       int
 	baseSize   int
@@ -37,19 +39,23 @@ func main() {
 }
 
 func Main() error {
-	return output()
-}
+	if err := checkFormat(*format); err != nil {
+		return err
+	}
 
-func output() error {
 	c, err := hexToColor(*background)
 	if err != nil {
 		return err
 	}
 	fmt.Printf("size:%d multiple:%d background:%v\n", size, *multiple, c)
 
-	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{size, size}})
+	return output(c)
+}
 
+func output(c *color.RGBA) error {
+	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{size, size}})
 	drawBG(img, c)
+
 	if err := drawImage(img); err != nil {
 		return err
 	}
@@ -122,6 +128,15 @@ func fetchBlueprint() ([][]int, []color.RGBA, error) {
 	}
 
 	return bp.Get(*style), plt, nil
+}
+
+func checkFormat(s string) error {
+	switch s {
+	case "gif", "png":
+		return nil
+	}
+
+	return errors.New("Unsupported formats")
 }
 
 func hexToColor(s string) (*color.RGBA, error) {
