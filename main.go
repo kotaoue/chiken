@@ -92,7 +92,7 @@ func fileName() string {
 	if *background != "" {
 		name = fmt.Sprintf("%s_%s", name, strings.ReplaceAll(*background, "#", ""))
 	}
-	return fmt.Sprintf("%s/%s.png", dir, name)
+	return fmt.Sprintf("%s/%s.%s", dir, name, *format)
 }
 
 func checkFormat(s string) error {
