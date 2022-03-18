@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	style      = flag.Int("s", 0, "style of rooster")
+	theme      = flag.Int("t", 0, "theme of rooster")
 	multiple   = flag.Int("m", 1, "value to be multiplied by 32")
 	background = flag.String("b", "", "background color. set with hex. example #ffffff. empty is transparent")
 	size       int
@@ -64,7 +64,7 @@ func output() error {
 func fileName() string {
 	dir := "img"
 	plt := &palette.Palette{}
-	name := plt.Name(*style)
+	name := plt.Name(*theme)
 
 	if *multiple > 1 {
 		name = fmt.Sprintf("%s_%d", name, *multiple)
@@ -112,7 +112,7 @@ func drawImage(img *image.RGBA) error {
 func fetchBlueprint() ([][]int, []color.RGBA, error) {
 	bp := &blueprint.Blueprint{}
 	p := &palette.Palette{}
-	plt, err := p.Get(*style)
+	plt, err := p.Get(*theme)
 	if err != nil {
 		return nil, nil, err
 	}

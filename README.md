@@ -8,6 +8,7 @@ go run main.go
 
 # 2 times
 go run main.go -m=2
+go run main.go -t=1
 go run main.go -b=#ffffff
 ```
 
