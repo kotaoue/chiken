@@ -12,6 +12,7 @@ import (
 
 	"github.com/kotaoue/chiken/pkg/blueprint"
 	"github.com/kotaoue/chiken/pkg/palette"
+	"github.com/kotaoue/chiken/pkg/portrait"
 )
 
 var (
@@ -54,7 +55,9 @@ func Main() error {
 
 func output(c *color.RGBA) error {
 	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{size, size}})
-	drawBG(img, c)
+
+	p := portrait.NewPortrait(size)
+	p.BG(img, c)
 
 	if err := drawImage(img); err != nil {
 		return err
