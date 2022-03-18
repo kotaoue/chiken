@@ -119,14 +119,12 @@ func drawImage(img *image.RGBA) error {
 }
 
 func fetchBlueprint() ([][]int, []color.RGBA, error) {
-	bp := &blueprint.Blueprint{}
-	p := &palette.Palette{}
-	plt, err := p.Get(*theme)
+	plt, err := palette.Get(*theme)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return bp.Get(*style), plt, nil
+	return blueprint.Get(*style), plt, nil
 }
 
 func checkFormat(s string) error {

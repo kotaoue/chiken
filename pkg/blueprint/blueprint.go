@@ -1,8 +1,5 @@
 package blueprint
 
-type Blueprint struct {
-}
-
 const (
 	BasicStyle int = iota
 	WalkStyle
@@ -16,17 +13,17 @@ func Name(style int) string {
 	return ""
 }
 
-func (b *Blueprint) Get(style int) [][]int {
+func Get(style int) [][]int {
 	switch style {
 	case BasicStyle:
-		return b.basic()
+		return basic()
 	case WalkStyle:
-		return b.walk()
+		return walk()
 	}
 	return nil
 }
 
-func (b *Blueprint) basic() [][]int {
+func basic() [][]int {
 	return [][]int{
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -62,7 +59,7 @@ func (b *Blueprint) basic() [][]int {
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	}
 }
-func (b *Blueprint) walk() [][]int {
+func walk() [][]int {
 	return [][]int{
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},

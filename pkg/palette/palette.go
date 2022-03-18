@@ -5,9 +5,6 @@ import (
 	"image/color"
 )
 
-type Palette struct {
-}
-
 const (
 	BasicStyle int = iota
 	BlackStyle
@@ -23,17 +20,17 @@ func Name(style int) string {
 	return ""
 }
 
-func (p *Palette) Get(style int) ([]color.RGBA, error) {
+func Get(style int) ([]color.RGBA, error) {
 	switch style {
 	case BasicStyle:
-		return p.basic(), nil
+		return basic(), nil
 	case BlackStyle:
-		return p.black(), nil
+		return black(), nil
 	}
 	return nil, errors.New("not exist palette")
 }
 
-func (*Palette) basic() []color.RGBA {
+func basic() []color.RGBA {
 	return []color.RGBA{
 		{0, 0, 0, 0},         // 背景色
 		{0, 0, 0, 255},       // 主線
@@ -48,7 +45,7 @@ func (*Palette) basic() []color.RGBA {
 	}
 }
 
-func (*Palette) black() []color.RGBA {
+func black() []color.RGBA {
 	return []color.RGBA{
 		{0, 0, 0, 0},         // 背景色
 		{0, 0, 0, 255},       // 主線
