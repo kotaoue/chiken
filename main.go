@@ -14,7 +14,8 @@ import (
 )
 
 var (
-	theme      = flag.Int("t", 0, "theme of rooster")
+	theme      = flag.Int("t", 0, "theme color of rooster")
+	style      = flag.Int("s", 0, "style of rooster")
 	multiple   = flag.Int("m", 1, "value to be multiplied by 32")
 	background = flag.String("b", "", "background color. set with hex. example #ffffff. empty is transparent")
 	size       int
@@ -66,6 +67,9 @@ func fileName() string {
 	plt := &palette.Palette{}
 	name := plt.Name(*theme)
 
+	if *style != blueprint.BasicStyle {
+		name = fmt.Sprintf("%s_%s", name, blueprint.Name(*style))
+	}
 	if *multiple > 1 {
 		name = fmt.Sprintf("%s_%d", name, *multiple)
 	}
@@ -117,7 +121,7 @@ func fetchBlueprint() ([][]int, []color.RGBA, error) {
 		return nil, nil, err
 	}
 
-	return bp.Get(blueprint.BasicStyle), plt, nil
+	return bp.Get(*style), plt, nil
 }
 
 func hexToColor(s string) (*color.RGBA, error) {
