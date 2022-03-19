@@ -57,7 +57,10 @@ func printReference() {
 	if args != "" {
 		args = " " + args
 	}
-	fmt.Println(args)
+
+	alt := fileName()
+	alt = strings.TrimPrefix(alt, "img/")
+	alt = strings.TrimSuffix(alt, fmt.Sprintf(".%s", *format))
 
 	fmt.Printf(
 		"|go run main.go%s|%s|%s|%d*%d|%s|![%s](%s)|\n",
@@ -67,7 +70,7 @@ func printReference() {
 		size,
 		size,
 		*background,
-		*theme,
+		alt,
 		fileName(),
 	)
 }
