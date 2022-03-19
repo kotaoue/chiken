@@ -31,7 +31,7 @@ func (p *Portrait) BG(img *image.RGBA, col *color.RGBA) {
 }
 
 func (p *Portrait) Draw(img *image.RGBA) error {
-	tpl, cols, err := p.fetchBlueprint()
+	style, theme, err := p.fetchBlueprint()
 	if err != nil {
 		return err
 	}
@@ -39,13 +39,13 @@ func (p *Portrait) Draw(img *image.RGBA) error {
 	for y := 0; y < p.opt.BaseSize; y++ {
 		fmt.Print("{")
 		for x := 0; x < p.opt.BaseSize; x++ {
-			i := tpl[y][x]
+			i := style[y][x]
 			fmt.Print(i)
 
 			if i != 0 {
 				for my := 0; my < p.opt.Multiple; my++ {
 					for mx := 0; mx < p.opt.Multiple; mx++ {
-						img.Set(x*p.opt.Multiple+mx, y*p.opt.Multiple+my, cols[i])
+						img.Set(x*p.opt.Multiple+mx, y*p.opt.Multiple+my, theme[i])
 					}
 				}
 			}
@@ -57,10 +57,10 @@ func (p *Portrait) Draw(img *image.RGBA) error {
 }
 
 func (p *Portrait) fetchBlueprint() ([][]int, []color.RGBA, error) {
-	plt, err := Theme{}.Get(p.opt.Theme)
+	theme, err := Theme{}.Get(p.opt.Theme)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return Style{}.Get(p.opt.Style), plt, nil
+	return Style{}.Get(p.opt.Style), theme, nil
 }
