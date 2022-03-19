@@ -15,6 +15,7 @@ go run main.go -s=walk
 |---|---|---|---|---|---|
 ||white|basic|32*32|transparent|![white](img/white.png)|
 |-s=walk|white|walk|32*32|transparent|![white_walk](img/white_walk.png)|
+|-s=wide|white|wide|32*32|transparent|![white_wide](img/white_wide.png)|
 |-f=gif -s=basic-walk|white|basic-walk|32*32|transparent|![white_basic-walk](img/white_basic-walk.gif)|
 |-f=gif -s=basic-walk -d=16|white|basic-walk|32*32|transparent|![white_basic-walk_delay16](img/white_basic-walk_delay16.gif)|
 |-t=black|black|basic|32*32|transparent|![black](img/black.png)|
