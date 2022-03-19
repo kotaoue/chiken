@@ -18,7 +18,7 @@ type Options struct {
 	BaseSize int
 	Multiple int
 	Style    string
-	Theme    int
+	Theme    string
 }
 
 func NewPortrait(o Options) *Portrait {

@@ -6,25 +6,15 @@ import (
 )
 
 const (
-	BasicStyle int = iota
-	BlackStyle
+	WhiteTheme = "white"
+	BlackTheme = "black"
 )
 
-func Name(style int) string {
-	switch style {
-	case BasicStyle:
-		return "white"
-	case BlackStyle:
-		return "black"
-	}
-	return ""
-}
-
-func Get(style int) ([]color.RGBA, error) {
-	switch style {
-	case BasicStyle:
+func Get(theme string) ([]color.RGBA, error) {
+	switch theme {
+	case WhiteTheme:
 		return basic(), nil
-	case BlackStyle:
+	case BlackTheme:
 		return black(), nil
 	}
 	return nil, errors.New("not exist palette")

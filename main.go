@@ -16,8 +16,8 @@ import (
 )
 
 var (
-	theme      = flag.Int("t", 0, "theme color of rooster")
-	style      = flag.String("s", "basic", "style of rooster")
+	theme      = flag.String("t", palette.WhiteTheme, "theme color of rooster")
+	style      = flag.String("s", blueprint.BasicStyle, "style of rooster")
 	multiple   = flag.Int("m", 1, "value to be multiplied by 32")
 	format     = flag.String("f", "png", "format of output image")
 	background = flag.String("b", "", "background color. set with hex. example #ffffff. empty is transparent")
@@ -81,7 +81,7 @@ func output(c *color.RGBA) error {
 
 func fileName() string {
 	dir := "img"
-	name := palette.Name(*theme)
+	name := *theme
 
 	if *style != blueprint.BasicStyle {
 		name = fmt.Sprintf("%s_%s", name, *style)
