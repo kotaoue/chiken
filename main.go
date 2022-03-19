@@ -4,9 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"image"
 	"image/color"
-	"image/png"
 	"os"
 	"strings"
 
@@ -52,6 +50,22 @@ func Main() error {
 	return output(c)
 }
 
+func output(c *color.RGBA) error {
+	p := portrait.NewPortrait(
+		portrait.Options{
+			Size:            size,
+			BaseSize:        baseSize,
+			Multiple:        *multiple,
+			Style:           *style,
+			Theme:           *theme,
+			BackgroundColor: c,
+			FileName:        fileName(),
+		},
+	)
+
+	return p.Draw()
+}
+
 func printReference() {
 	args := strings.Join(os.Args[1:], " ")
 	if args != "" {
@@ -73,32 +87,6 @@ func printReference() {
 		alt,
 		fileName(),
 	)
-}
-
-func output(c *color.RGBA) error {
-	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{size, size}})
-
-	p := portrait.NewPortrait(
-		portrait.Options{
-			Size:     size,
-			BaseSize: baseSize,
-			Multiple: *multiple,
-			Style:    *style,
-			Theme:    *theme,
-		},
-	)
-	p.BG(img, c)
-
-	if err := p.Draw(img); err != nil {
-		return err
-	}
-
-	f, err := os.Create(fileName())
-	if err != nil {
-		return err
-	}
-
-	return png.Encode(f, img)
 }
 
 func fileName() string {

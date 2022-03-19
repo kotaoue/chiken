@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"image/png"
+	"os"
 )
 
 type Portrait struct {
@@ -11,26 +13,45 @@ type Portrait struct {
 }
 
 type Options struct {
-	Size     int
-	BaseSize int
-	Multiple int
-	Style    string
-	Theme    string
+	Size            int
+	BaseSize        int
+	Multiple        int
+	Style           string
+	Theme           string
+	BackgroundColor *color.RGBA
+	FileName        string
 }
 
 func NewPortrait(o Options) *Portrait {
 	return &Portrait{opt: o}
 }
 
-func (p *Portrait) BG(img *image.RGBA, col *color.RGBA) {
+func (p *Portrait) Draw() error {
+	img := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{p.opt.Size, p.opt.Size}})
+
+	p.drawBackground(img)
+
+	if err := p.drawSubject(img); err != nil {
+		return err
+	}
+
+	f, err := os.Create(p.opt.FileName)
+	if err != nil {
+		return err
+	}
+
+	return png.Encode(f, img)
+}
+
+func (p *Portrait) drawBackground(img *image.RGBA) {
 	for x := 0; x < p.opt.Size; x++ {
 		for y := 0; y < p.opt.Size; y++ {
-			img.Set(x, y, col)
+			img.Set(x, y, p.opt.BackgroundColor)
 		}
 	}
 }
 
-func (p *Portrait) Draw(img *image.RGBA) error {
+func (p *Portrait) drawSubject(img *image.RGBA) error {
 	style, theme, err := p.fetchBlueprint()
 	if err != nil {
 		return err
