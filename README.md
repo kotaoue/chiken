@@ -1,7 +1,16 @@
 # chiken
 The icon of kotaoue
 
-## Usage & Result
+## Usage
+```
+# basic
+go run main.go
+
+# walk style
+go run main.go -s=walk
+```
+
+## Result
 |args|theme|style|size|background|image|
 |---|---|---|---|---|---|
 ||white|basic|32*32|transparent|![white](img/white.png)|
