@@ -17,6 +17,7 @@ var (
 	style      = flag.String("s", ptr.BasicStyle, "style of rooster")
 	multiple   = flag.Int("m", 1, "value to be multiplied by 32")
 	format     = flag.String("f", "png", "format of output image")
+	delay      = flag.Int("d", 0, "delay time for gif")
 	background = flag.String("b", "transparent", "background color. set with hex. example #ffffff. empty is transparent")
 	size       int
 	baseSize   int
@@ -45,13 +46,18 @@ func Main() error {
 	if err != nil {
 		return err
 	}
+
+	if err := output(c); err != nil {
+		return err
+	}
+
 	printReference()
 
-	return output(c)
+	return nil
 }
 
 func output(c *color.RGBA) error {
-	p := portrait.NewPortrait(
+	p, err := portrait.NewPortrait(
 		portrait.Options{
 			Size:            size,
 			BaseSize:        baseSize,
@@ -59,11 +65,17 @@ func output(c *color.RGBA) error {
 			Style:           *style,
 			Theme:           *theme,
 			BackgroundColor: c,
+			Format:          *format,
+			Delay:           *delay,
 			FileName:        fileName(),
 		},
 	)
 
-	return p.Draw()
+	if err != nil {
+		return err
+	}
+
+	return p.Encode()
 }
 
 func printReference() {
@@ -101,6 +113,9 @@ func fileName() string {
 	}
 	if *background != "transparent" {
 		name = fmt.Sprintf("%s_%s", name, strings.ReplaceAll(*background, "#", ""))
+	}
+	if *delay > 0 {
+		name = fmt.Sprintf("%s_delay%d", name, *delay)
 	}
 	return fmt.Sprintf("%s/%s.%s", dir, name, *format)
 }

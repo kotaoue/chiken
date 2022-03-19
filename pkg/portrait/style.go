@@ -1,5 +1,7 @@
 package portrait
 
+import "errors"
+
 const (
 	BasicStyle = "basic"
 	WalkStyle  = "walk"
@@ -7,14 +9,14 @@ const (
 
 type Style struct{}
 
-func (s Style) Get(style string) [][]int {
+func (s Style) Get(style string) ([][]int, error) {
 	switch style {
 	case BasicStyle:
-		return s.basic()
+		return s.basic(), nil
 	case WalkStyle:
-		return s.walk()
+		return s.walk(), nil
 	}
-	return nil
+	return nil, errors.New("not exist style")
 }
 
 func (Style) basic() [][]int {
