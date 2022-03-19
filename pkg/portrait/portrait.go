@@ -17,7 +17,7 @@ type Options struct {
 	Size     int
 	BaseSize int
 	Multiple int
-	Style    int
+	Style    string
 	Theme    int
 }
 

@@ -17,7 +17,7 @@ import (
 
 var (
 	theme      = flag.Int("t", 0, "theme color of rooster")
-	style      = flag.Int("s", 0, "style of rooster")
+	style      = flag.String("s", "basic", "style of rooster")
 	multiple   = flag.Int("m", 1, "value to be multiplied by 32")
 	format     = flag.String("f", "png", "format of output image")
 	background = flag.String("b", "", "background color. set with hex. example #ffffff. empty is transparent")
@@ -84,7 +84,7 @@ func fileName() string {
 	name := palette.Name(*theme)
 
 	if *style != blueprint.BasicStyle {
-		name = fmt.Sprintf("%s_%s", name, blueprint.Name(*style))
+		name = fmt.Sprintf("%s_%s", name, *style)
 	}
 	if *multiple > 1 {
 		name = fmt.Sprintf("%s_%d", name, *multiple)

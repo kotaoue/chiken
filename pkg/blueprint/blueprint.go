@@ -1,19 +1,11 @@
 package blueprint
 
 const (
-	BasicStyle int = iota
-	WalkStyle
+	BasicStyle = "basic"
+	WalkStyle  = "walk"
 )
 
-func Name(style int) string {
-	switch style {
-	case WalkStyle:
-		return "walk"
-	}
-	return ""
-}
-
-func Get(style int) [][]int {
+func Get(style string) [][]int {
 	switch style {
 	case BasicStyle:
 		return basic()
