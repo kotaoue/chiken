@@ -19,7 +19,7 @@ var (
 	style      = flag.String("s", ptr.BasicStyle, "style of rooster")
 	multiple   = flag.Int("m", 1, "value to be multiplied by 32")
 	format     = flag.String("f", "png", "format of output image")
-	background = flag.String("b", "", "background color. set with hex. example #ffffff. empty is transparent")
+	background = flag.String("b", "transparent", "background color. set with hex. example #ffffff. empty is transparent")
 	size       int
 	baseSize   int
 )
@@ -47,9 +47,29 @@ func Main() error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("size:%d multiple:%d background:%v\n", size, *multiple, c)
+	printReference()
 
 	return output(c)
+}
+
+func printReference() {
+	args := strings.Join(os.Args[1:], " ")
+	if args != "" {
+		args = " " + args
+	}
+	fmt.Println(args)
+
+	fmt.Printf(
+		"|go run main.go%s|%s|%s|%d*%d|%s|![%s](%s)|\n",
+		args,
+		*theme,
+		*style,
+		size,
+		size,
+		*background,
+		*theme,
+		fileName(),
+	)
 }
 
 func output(c *color.RGBA) error {
@@ -88,7 +108,7 @@ func fileName() string {
 	if *multiple > 1 {
 		name = fmt.Sprintf("%s_%d", name, *multiple)
 	}
-	if *background != "" {
+	if *background != "transparent" {
 		name = fmt.Sprintf("%s_%s", name, strings.ReplaceAll(*background, "#", ""))
 	}
 	return fmt.Sprintf("%s/%s.%s", dir, name, *format)
