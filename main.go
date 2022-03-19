@@ -79,18 +79,13 @@ func output(c *color.RGBA) error {
 }
 
 func printReference() {
-	args := strings.Join(os.Args[1:], " ")
-	if args != "" {
-		args = " " + args
-	}
-
 	alt := fileName()
 	alt = strings.TrimPrefix(alt, "img/")
 	alt = strings.TrimSuffix(alt, fmt.Sprintf(".%s", *format))
 
 	fmt.Printf(
-		"|go run main.go%s|%s|%s|%d*%d|%s|![%s](%s)|\n",
-		args,
+		"|%s|%s|%s|%d*%d|%s|![%s](%s)|\n",
+		strings.Join(os.Args[1:], " "),
 		*theme,
 		*style,
 		size,
