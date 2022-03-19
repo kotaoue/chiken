@@ -10,14 +10,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/kotaoue/chiken/pkg/blueprint"
-	"github.com/kotaoue/chiken/pkg/palette"
 	"github.com/kotaoue/chiken/pkg/portrait"
+	ptr "github.com/kotaoue/chiken/pkg/portrait"
 )
 
 var (
-	theme      = flag.String("t", palette.WhiteTheme, "theme color of rooster")
-	style      = flag.String("s", blueprint.BasicStyle, "style of rooster")
+	theme      = flag.String("t", ptr.WhiteTheme, "theme color of rooster")
+	style      = flag.String("s", ptr.BasicStyle, "style of rooster")
 	multiple   = flag.Int("m", 1, "value to be multiplied by 32")
 	format     = flag.String("f", "png", "format of output image")
 	background = flag.String("b", "", "background color. set with hex. example #ffffff. empty is transparent")
@@ -83,7 +82,7 @@ func fileName() string {
 	dir := "img"
 	name := *theme
 
-	if *style != blueprint.BasicStyle {
+	if *style != ptr.BasicStyle {
 		name = fmt.Sprintf("%s_%s", name, *style)
 	}
 	if *multiple > 1 {

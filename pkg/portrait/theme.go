@@ -1,4 +1,4 @@
-package palette
+package portrait
 
 import (
 	"errors"
@@ -10,17 +10,19 @@ const (
 	BlackTheme = "black"
 )
 
-func Get(theme string) ([]color.RGBA, error) {
+type Theme struct{}
+
+func (t Theme) Get(theme string) ([]color.RGBA, error) {
 	switch theme {
 	case WhiteTheme:
-		return basic(), nil
+		return t.basic(), nil
 	case BlackTheme:
-		return black(), nil
+		return t.black(), nil
 	}
 	return nil, errors.New("not exist palette")
 }
 
-func basic() []color.RGBA {
+func (Theme) basic() []color.RGBA {
 	return []color.RGBA{
 		{0, 0, 0, 0},         // 背景色
 		{0, 0, 0, 255},       // 主線
@@ -32,10 +34,11 @@ func basic() []color.RGBA {
 		{255, 255, 0, 255},   // くちばし
 		{255, 255, 255, 255}, // くちばし ハイライト
 		{255, 255, 0, 255},   // 足
+
 	}
 }
 
-func black() []color.RGBA {
+func (Theme) black() []color.RGBA {
 	return []color.RGBA{
 		{0, 0, 0, 0},         // 背景色
 		{0, 0, 0, 255},       // 主線

@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"image"
 	"image/color"
-
-	"github.com/kotaoue/chiken/pkg/blueprint"
-	"github.com/kotaoue/chiken/pkg/palette"
 )
 
 type Portrait struct {
@@ -60,10 +57,10 @@ func (p *Portrait) Draw(img *image.RGBA) error {
 }
 
 func (p *Portrait) fetchBlueprint() ([][]int, []color.RGBA, error) {
-	plt, err := palette.Get(p.opt.Theme)
+	plt, err := Theme{}.Get(p.opt.Theme)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	return blueprint.Get(p.opt.Style), plt, nil
+	return Style{}.Get(p.opt.Style), plt, nil
 }

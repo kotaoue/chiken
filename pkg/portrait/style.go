@@ -1,21 +1,23 @@
-package blueprint
+package portrait
 
 const (
 	BasicStyle = "basic"
 	WalkStyle  = "walk"
 )
 
-func Get(style string) [][]int {
+type Style struct{}
+
+func (s Style) Get(style string) [][]int {
 	switch style {
 	case BasicStyle:
-		return basic()
+		return s.basic()
 	case WalkStyle:
-		return walk()
+		return s.walk()
 	}
 	return nil
 }
 
-func basic() [][]int {
+func (Style) basic() [][]int {
 	return [][]int{
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -51,7 +53,7 @@ func basic() [][]int {
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	}
 }
-func walk() [][]int {
+func (Style) walk() [][]int {
 	return [][]int{
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
