@@ -14,13 +14,22 @@ import (
 	"github.com/kotaoue/chiken/pkg/portrait"
 )
 
+const (
+	defaultTheme      = portrait.WhiteTheme
+	defaultStyle      = portrait.BasicStyle
+	defaultFormat     = "png"
+	defaultBackground = "transparent"
+	defaultMultiple   = 1
+	defaultDelay      = 0
+)
+
 var (
-	theme      = flag.String("t", portrait.WhiteTheme, "theme color of rooster")
-	style      = flag.String("s", portrait.BasicStyle, "style of rooster")
-	format     = flag.String("f", "png", "format of output image")
-	background = flag.String("b", "transparent", "background color. set with hex. example #ffffff. empty is transparent")
-	multiple   = flag.Int("m", 1, "value to be multiplied by 32")
-	delay      = flag.Int("d", 0, "delay time for gif")
+	theme      = flag.String("t", defaultTheme, "theme color of rooster")
+	style      = flag.String("s", defaultStyle, "style of rooster")
+	format     = flag.String("f", defaultFormat, "format of output image")
+	background = flag.String("b", defaultBackground, "background color. set with hex. example #ffffff. empty is transparent")
+	multiple   = flag.Int("m", defaultMultiple, "value to be multiplied by 32")
+	delay      = flag.Int("d", defaultDelay, "delay time for gif")
 	dump       = flag.Bool("dump", false, "re encode from Args Example on README")
 	size       int
 	baseSize   int
@@ -150,12 +159,12 @@ func reOutputs() error {
 		if afterArgsLine && afterHyphenLine {
 			ss := strings.Split(fs.Text(), "|")
 
-			*theme = portrait.WhiteTheme
-			*style = portrait.BasicStyle
-			*format = "png"
-			*background = "transparent"
-			*multiple = 1
-			*delay = 0
+			*theme = defaultTheme
+			*style = defaultStyle
+			*format = defaultFormat
+			*background = defaultBackground
+			*multiple = defaultMultiple
+			*delay = defaultDelay
 
 			for _, v := range strings.Split(ss[1], " ") {
 				switch {
