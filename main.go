@@ -8,13 +8,13 @@ import (
 	"os"
 	"strings"
 
+	"github.com/kotaoue/chiken/pkg/cutil"
 	"github.com/kotaoue/chiken/pkg/portrait"
-	ptr "github.com/kotaoue/chiken/pkg/portrait"
 )
 
 var (
-	theme      = flag.String("t", ptr.WhiteTheme, "theme color of rooster")
-	style      = flag.String("s", ptr.BasicStyle, "style of rooster")
+	theme      = flag.String("t", portrait.WhiteTheme, "theme color of rooster")
+	style      = flag.String("s", portrait.BasicStyle, "style of rooster")
 	multiple   = flag.Int("m", 1, "value to be multiplied by 32")
 	format     = flag.String("f", "png", "format of output image")
 	delay      = flag.Int("d", 0, "delay time for gif")
@@ -38,16 +38,20 @@ func main() {
 }
 
 func Main() error {
+	return output()
+}
+
+func output() error {
 	if err := checkFormat(*format); err != nil {
 		return err
 	}
 
-	c, err := hexToColor(*background)
+	c, err := cutil.HexToColor(*background)
 	if err != nil {
 		return err
 	}
 
-	if err := output(c); err != nil {
+	if err := encode(c); err != nil {
 		return err
 	}
 
@@ -56,7 +60,7 @@ func Main() error {
 	return nil
 }
 
-func output(c *color.RGBA) error {
+func encode(c *color.RGBA) error {
 	p, err := portrait.NewPortrait(
 		portrait.Options{
 			Size:            size,
@@ -100,7 +104,7 @@ func fileName() string {
 	dir := "img"
 	name := *theme
 
-	if *style != ptr.BasicStyle {
+	if *style != portrait.BasicStyle {
 		name = fmt.Sprintf("%s_%s", name, *style)
 	}
 	if *multiple > 1 {
@@ -122,17 +126,4 @@ func checkFormat(s string) error {
 	}
 
 	return errors.New("Unsupported formats")
-}
-
-func hexToColor(s string) (*color.RGBA, error) {
-	c := &color.RGBA{}
-
-	if len(s) == 7 {
-		if _, err := fmt.Sscanf(s, "#%02x%02x%02x", &c.R, &c.G, &c.B); err != nil {
-			return nil, err
-		}
-		c.A = 255
-	}
-
-	return c, nil
 }
