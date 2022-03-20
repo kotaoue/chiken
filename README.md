@@ -21,7 +21,6 @@ go run main.go -s=walk
 |-f=gif -s=basic-walk|white|basic-walk|32*32|transparent|![white_basic-walk](img/white_basic-walk.gif)|
 |-f=gif -s=basic-walk -d=16|white|basic-walk|32*32|transparent|![white_basic-walk_delay16](img/white_basic-walk_delay16.gif)|
 |-f=gif -s=basic-tiptoe -d=16|white|basic-tiptoe|32*32|transparent|![white_basic-tiptoe_delay16](img/white_basic-tiptoe_delay16.gif)|
-|-f=gif -s=basic-tiptoe -d=16|white|basic-jump|32*32|transparent|![white_basic-jump_delay16](img/white_basic-jump_delay16.gif)|
 |-f=gif -s=basic-jump -d=16|white|basic-jump|32*32|transparent|![white_basic-jump_delay16](img/white_basic-jump_delay16.gif)|
 |-t=black|black|basic|32*32|transparent|![black](img/black.png)|
 |-b=#ffffff|white|basic|32*32|#ffffff|![white_ffffff](img/white_ffffff.png)|
