@@ -69,7 +69,7 @@ func (p *Portrait) encodeGif() error {
 	var disposals []byte
 
 	for _, v := range strings.Split(p.opt.Style, "-") {
-		fmt.Println(v)
+		fmt.Printf("style:%s\n", v)
 		img, err := p.draw(v)
 		if err != nil {
 			return err

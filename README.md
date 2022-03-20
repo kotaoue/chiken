@@ -10,7 +10,7 @@ go run main.go
 go run main.go -s=walk
 ```
 
-## Result
+## Args Example
 |args|theme|style|size|background|image|
 |---|---|---|---|---|---|
 ||white|basic|32*32|transparent|![white](img/white.png)|
