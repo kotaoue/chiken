@@ -25,5 +25,4 @@ go run main.go -s=walk
 |-t=black|black|basic|32*32|transparent|![black](img/black.png)|
 |-b=#ffffff|white|basic|32*32|#ffffff|![white_ffffff](img/white_ffffff.png)|
 |-m=2|white|basic|64*64|transparent|![white_2](img/white_2.png)|
-|-m=3|white|basic|96*96|transparent|![white_3](img/white_3.png)|
 |-f=gif -s=basic-tiptoe-basic-tiptoe-basic-jump -d=64 -m=3|white|basic-tiptoe-basic-tiptoe-basic-jump|96*96|transparent|![white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64](img/white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64.gif)|
