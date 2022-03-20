@@ -66,6 +66,7 @@ func (p *Portrait) encodePng() error {
 func (p *Portrait) encodeGif() error {
 	var images []*image.Paletted
 	var delays []int
+	var disposals []byte
 
 	for _, v := range strings.Split(p.opt.Style, "-") {
 		fmt.Println(v)
@@ -76,6 +77,7 @@ func (p *Portrait) encodeGif() error {
 
 		images = append(images, img)
 		delays = append(delays, p.opt.Delay)
+		disposals = append(disposals, gif.DisposalPrevious)
 	}
 
 	fp, err := os.OpenFile(p.opt.FileName, os.O_WRONLY|os.O_CREATE, 0644)
@@ -85,8 +87,9 @@ func (p *Portrait) encodeGif() error {
 	defer fp.Close()
 
 	return gif.EncodeAll(fp, &gif.GIF{
-		Image: images,
-		Delay: delays,
+		Image:    images,
+		Delay:    delays,
+		Disposal: disposals,
 	})
 }
 
