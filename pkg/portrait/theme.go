@@ -28,6 +28,8 @@ func (Theme) basic() []color.Color {
 		color.RGBA{0, 0, 0, 255},       // 主線
 		color.RGBA{255, 255, 255, 255}, // メインカラー
 		color.RGBA{196, 196, 196, 255}, // メインカラー 影
+		color.RGBA{255, 255, 255, 255}, // サブカラー
+		color.RGBA{196, 196, 196, 255}, // サブカラー 影
 		color.RGBA{255, 0, 0, 255},     // トサカ
 		color.RGBA{255, 128, 128, 255}, // トサカ ハイライト
 		color.RGBA{196, 0, 0, 255},     // トサカ 影
@@ -43,6 +45,8 @@ func (Theme) black() []color.Color {
 		color.RGBA{0, 0, 0, 255},       // 主線
 		color.RGBA{64, 64, 64, 255},    // メインカラー
 		color.RGBA{48, 48, 48, 255},    // メインカラー 影
+		color.RGBA{64, 64, 64, 255},    // サブカラー
+		color.RGBA{48, 48, 48, 255},    // サブカラー 影
 		color.RGBA{255, 0, 0, 255},     // トサカ
 		color.RGBA{255, 128, 128, 255}, // トサカ ハイライト
 		color.RGBA{128, 0, 0, 255},     // トサカ 影
