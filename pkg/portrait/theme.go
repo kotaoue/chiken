@@ -13,7 +13,8 @@ const (
 	PandaTheme      = "panda"
 	YellowTheme     = "yellow"
 	GreenTheme      = "green"
-	mossGreenTheme  = "mossGreen"
+	MossGreenTheme  = "mossGreen"
+	LightBlueTheme  = "lightBlue"
 )
 
 type Theme struct{}
@@ -34,8 +35,10 @@ func (t Theme) Get(theme string) ([]color.Color, error) {
 		return t.yellow(), nil
 	case GreenTheme:
 		return t.green(), nil
-	case mossGreenTheme:
+	case MossGreenTheme:
 		return t.mossGreen(), nil
+	case LightBlueTheme:
+		return t.lightBlue(), nil
 	}
 	return nil, errors.New("not exist theme")
 }
@@ -167,6 +170,23 @@ func (Theme) mossGreen() []color.Color {
 		color.RGBA{5, 69, 15, 255},     // メインカラー 影
 		color.RGBA{21, 125, 38, 255},   // サブカラー
 		color.RGBA{5, 69, 15, 255},     // サブカラー 影
+		color.RGBA{255, 0, 0, 255},     // トサカ
+		color.RGBA{255, 128, 128, 255}, // トサカ ハイライト
+		color.RGBA{196, 0, 0, 255},     // トサカ 影
+		color.RGBA{255, 255, 0, 255},   // くちばし
+		color.RGBA{255, 255, 255, 255}, // くちばし ハイライト
+		color.RGBA{255, 255, 0, 255},   // 足
+	}
+}
+
+func (Theme) lightBlue() []color.Color {
+	return []color.Color{
+		color.RGBA{0, 0, 0, 0},         // 背景色
+		color.RGBA{0, 0, 0, 255},       // 主線
+		color.RGBA{86, 235, 207, 255},  // メインカラー
+		color.RGBA{27, 158, 134, 255},  // メインカラー 影
+		color.RGBA{86, 235, 207, 255},  // サブカラー
+		color.RGBA{27, 158, 134, 255},  // サブカラー 影
 		color.RGBA{255, 0, 0, 255},     // トサカ
 		color.RGBA{255, 128, 128, 255}, // トサカ ハイライト
 		color.RGBA{196, 0, 0, 255},     // トサカ 影
