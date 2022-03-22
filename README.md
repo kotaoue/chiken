@@ -39,6 +39,7 @@ go run main.go -s=walk
 |-t=orange|orange|basic|32*32|transparent|![orange](img/orange.png)|
 |-t=gray|gray|basic|32*32|transparent|![gray](img/gray.png)|
 |-t=player2|player2|basic|32*32|transparent|![player2](img/player2.png)|
+|-t=player3|player3|basic|32*32|transparent|![player3](img/player3.png)|
 |-b=#ffffff|white|basic|32*32|#ffffff|![white_ffffff](img/white_ffffff.png)|
 |-m=2|white|basic|64*64|transparent|![white_2](img/white_2.png)|
 |-f=gif -s=basic-tiptoe-basic-tiptoe-basic-jump -d=64 -m=3|white|basic-tiptoe-basic-tiptoe-basic-jump|96*96|transparent|![white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64](img/white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64.gif)|
