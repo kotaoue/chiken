@@ -77,7 +77,7 @@ func output() error {
 }
 
 func encode(c *color.RGBA) error {
-	p, err := portrait.NewPortrait(
+	p := portrait.NewPortrait(
 		portrait.Options{
 			Size:            size,
 			BaseSize:        baseSize,
@@ -90,10 +90,6 @@ func encode(c *color.RGBA) error {
 			FileName:        fileName(),
 		},
 	)
-
-	if err != nil {
-		return err
-	}
 
 	return p.Encode()
 }
