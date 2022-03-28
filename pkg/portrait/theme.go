@@ -2,10 +2,15 @@ package portrait
 
 import (
 	"errors"
+	"fmt"
 	"image/color"
+	"math"
+	"strconv"
+	"strings"
 )
 
 const (
+	PartyTheme      = "party"
 	WhiteTheme      = "white"
 	BrownTheme      = "brown"
 	BlackTheme      = "black"
@@ -30,7 +35,30 @@ const (
 
 type Theme struct{}
 
+func (Theme) Adjust(theme string) (string, error) {
+	if strings.HasPrefix(theme, PartyTheme) {
+		ratio, err := strconv.Atoi(strings.TrimPrefix(theme, PartyTheme))
+		if err != nil || ratio <= 0 {
+			return "", fmt.Errorf("party expects a format of party{int}. but '%s' was specified", theme)
+		}
+
+		var ss []string
+		angle := math.Round(360 / float64(ratio))
+		for i := 0; i < 360; i += int(angle) {
+			ss = append(ss, fmt.Sprintf("%s%d", PartyTheme, i))
+		}
+		s := strings.Join(ss, "-")
+		return s, nil
+	}
+
+	return theme, nil
+}
+
 func (t Theme) Get(theme string) ([]color.Color, error) {
+	if strings.HasPrefix(theme, PartyTheme) {
+		return t.party(theme)
+	}
+
 	switch theme {
 	case WhiteTheme:
 		return t.basic(), nil
@@ -74,6 +102,37 @@ func (t Theme) Get(theme string) ([]color.Color, error) {
 		return t.player4(), nil
 	}
 	return nil, errors.New("not exist theme")
+}
+
+func (t Theme) party(s string) ([]color.Color, error) {
+	i, err := strconv.Atoi(strings.TrimPrefix(s, PartyTheme))
+	if err != nil || i < 0 {
+		return nil, fmt.Errorf("party expects a format of party{int}. but '%s' was specified", s)
+	}
+
+	c := t.basic()
+
+	rRad := float64(i) * math.Pi / float64(180)
+	gRad := float64(i+120) * math.Pi / float64(180)
+	bRad := float64(i+240) * math.Pi / float64(180)
+
+	c[2] = color.RGBA{
+		uint8(math.Abs(math.Round(255 * math.Sin(rRad)))),
+		uint8(math.Abs(math.Round(255 * math.Sin(bRad)))),
+		uint8(math.Abs(math.Round(255 * math.Sin(gRad)))),
+		255,
+	}
+	c[3] = color.RGBA{
+		uint8(math.Abs(math.Round(196 * math.Sin(rRad)))),
+		uint8(math.Abs(math.Round(196 * math.Sin(bRad)))),
+		uint8(math.Abs(math.Round(196 * math.Sin(gRad)))),
+		255,
+	}
+
+	c[4] = c[2]
+	c[5] = c[3]
+
+	return c, nil
 }
 
 func (Theme) basic() []color.Color {

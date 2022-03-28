@@ -55,12 +55,18 @@ func (p *Portrait) encodePng() error {
 }
 
 func (p *Portrait) encodeGif() error {
+	thms, err := Theme{}.Adjust(p.opt.Theme)
+	if err != nil {
+		return err
+	}
+	fmt.Println(thms)
+
 	var images []*image.Paletted
 	var delays []int
 	var disposals []byte
 
 	for _, stl := range strings.Split(p.opt.Style, "-") {
-		for _, thm := range strings.Split(p.opt.Theme, "-") {
+		for _, thm := range strings.Split(thms, "-") {
 			fmt.Printf("style:%s theme:%s\n", stl, thm)
 			img, err := p.draw(stl, thm)
 			if err != nil {

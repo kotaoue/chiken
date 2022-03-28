@@ -42,6 +42,10 @@ go run main.go -s=walk
 |-t=player3|player3|basic|32*32|transparent|![player3](img/player3.png)|
 |-t=player4|player4|basic|32*32|transparent|![player4](img/player4.png)|
 |-f=gif -t=white-player2-player3-player4|white-player2-player3-player4|basic|32*32|transparent|![white-player2-player3-player4](img/white-player2-player3-player4.gif)|
+|-t=party1|party1|basic|32*32|transparent|![party1](img/party1.png)|
+|-f=gif -t=party8|party8|basic|32*32|transparent|![party8](img/party8.gif)|
+|-f=gif -t=party16|party16|basic|32*32|transparent|![party16](img/party16.gif)|
+|-f=gif -t=party32|party32|basic|32*32|transparent|![party32](img/party32.gif)|
 |-b=#ffffff|white|basic|32*32|#ffffff|![white_ffffff](img/white_ffffff.png)|
 |-m=2|white|basic|64*64|transparent|![white_2](img/white_2.png)|
 |-f=gif -s=basic-tiptoe-basic-tiptoe-basic-jump -d=64 -m=3|white|basic-tiptoe-basic-tiptoe-basic-jump|96*96|transparent|![white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64](img/white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64.gif)|
