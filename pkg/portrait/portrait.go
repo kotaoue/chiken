@@ -65,8 +65,8 @@ func (p *Portrait) encodeGif() error {
 	var delays []int
 	var disposals []byte
 
-	for _, stl := range strings.Split(p.opt.Style, "-") {
-		for _, thm := range strings.Split(thms, "-") {
+	for _, thm := range strings.Split(thms, "-") {
+		for _, stl := range strings.Split(p.opt.Style, "-") {
 			fmt.Printf("style:%s theme:%s\n", stl, thm)
 			img, err := p.draw(stl, thm)
 			if err != nil {

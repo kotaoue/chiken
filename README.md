@@ -46,6 +46,7 @@ go run main.go -s=walk
 |-f=gif -t=party8|party8|basic|32*32|transparent|![party8](img/party8.gif)|
 |-f=gif -t=party16|party16|basic|32*32|transparent|![party16](img/party16.gif)|
 |-f=gif -t=party32|party32|basic|32*32|transparent|![party32](img/party32.gif)|
+|-f=gif -t=party32 -s=basic-tiptoe|party32|basic-tiptoe|32*32|transparent|![party32_basic-tiptoe](img/party32_basic-tiptoe.gif)|
 |-b=#ffffff|white|basic|32*32|#ffffff|![white_ffffff](img/white_ffffff.png)|
 |-m=2|white|basic|64*64|transparent|![white_2](img/white_2.png)|
 |-f=gif -s=basic-tiptoe-basic-tiptoe-basic-jump -d=64 -m=3|white|basic-tiptoe-basic-tiptoe-basic-jump|96*96|transparent|![white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64](img/white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64.gif)|
