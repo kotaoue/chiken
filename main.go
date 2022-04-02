@@ -18,6 +18,7 @@ const (
 	defaultTheme      = portrait.WhiteTheme
 	defaultStyle      = portrait.BasicStyle
 	defaultFormat     = "png"
+	defaultEffect     = ""
 	defaultBackground = "transparent"
 	defaultMultiple   = 1
 	defaultDelay      = 0
@@ -27,6 +28,7 @@ var (
 	theme      = flag.String("t", defaultTheme, "theme color of rooster")
 	style      = flag.String("s", defaultStyle, "style of rooster")
 	format     = flag.String("f", defaultFormat, "format of output image")
+	effect     = flag.String("e", defaultEffect, "set visual effects")
 	background = flag.String("b", defaultBackground, "background color. set with hex. example #ffffff. empty is transparent")
 	multiple   = flag.Int("m", defaultMultiple, "value to be multiplied by 32")
 	delay      = flag.Int("d", defaultDelay, "delay time for gif")
@@ -86,6 +88,7 @@ func encode(c *color.RGBA) error {
 			Theme:           *theme,
 			BackgroundColor: c,
 			Format:          *format,
+			Effect:          *effect,
 			Delay:           *delay,
 			FileName:        fileName(),
 		},
@@ -120,6 +123,9 @@ func fileName() string {
 
 	if *style != portrait.BasicStyle {
 		name = fmt.Sprintf("%s_%s", name, *style)
+	}
+	if *effect != "" {
+		name = fmt.Sprintf("%s_%s", name, *effect)
 	}
 	if *multiple > 1 {
 		name = fmt.Sprintf("%s_%d", name, *multiple)

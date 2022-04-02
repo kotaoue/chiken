@@ -20,6 +20,7 @@ type Options struct {
 	Multiple        int
 	Style           string
 	Theme           string
+	Effect          string
 	BackgroundColor *color.RGBA
 	Format          string
 	Delay           int
@@ -41,7 +42,7 @@ func (p *Portrait) Encode() error {
 }
 
 func (p *Portrait) encodePng() error {
-	img, err := p.draw(p.opt.Style, p.opt.Theme)
+	img, err := p.draw(p.opt.Style, p.opt.Theme, p.opt.Effect)
 	if err != nil {
 		return err
 	}
@@ -68,7 +69,7 @@ func (p *Portrait) encodeGif() error {
 	for _, thm := range strings.Split(thms, "-") {
 		for _, stl := range strings.Split(p.opt.Style, "-") {
 			fmt.Printf("style:%s theme:%s\n", stl, thm)
-			img, err := p.draw(stl, thm)
+			img, err := p.draw(stl, thm, p.opt.Effect)
 			if err != nil {
 				return err
 			}
@@ -92,7 +93,7 @@ func (p *Portrait) encodeGif() error {
 	})
 }
 
-func (p *Portrait) draw(stl string, thm string) (*image.Paletted, error) {
+func (p *Portrait) draw(stl string, thm string, eff string) (*image.Paletted, error) {
 	style, err := p.fetchStyle(stl)
 	if err != nil {
 		return nil, err
@@ -102,6 +103,13 @@ func (p *Portrait) draw(stl string, thm string) (*image.Paletted, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	effect := NewEffect(theme)
+	theme, err = effect.Apply(eff)
+	if err != nil {
+		return nil, err
+	}
+
 	img := image.NewPaletted(image.Rectangle{image.Point{0, 0}, image.Point{p.opt.Size, p.opt.Size}}, theme)
 
 	p.drawBackground(img)
