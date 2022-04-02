@@ -2,6 +2,7 @@ package portrait
 
 import (
 	"errors"
+	"fmt"
 	"image/color"
 )
 
@@ -38,6 +39,7 @@ func (e Effect) negative() []color.Color {
 			B: uint8(^b),
 			A: uint8(a),
 		}
+		fmt.Printf("%3v -> %3v\n", v, e.theme[k])
 	}
 	return e.theme
 }

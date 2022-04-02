@@ -103,6 +103,7 @@ func (p *Portrait) draw(stl string, thm string, eff string) (*image.Paletted, er
 	if err != nil {
 		return nil, err
 	}
+	theme = append(theme, *p.opt.BackgroundColor)
 
 	effect := NewEffect(theme)
 	theme, err = effect.Apply(eff)
@@ -112,7 +113,7 @@ func (p *Portrait) draw(stl string, thm string, eff string) (*image.Paletted, er
 
 	img := image.NewPaletted(image.Rectangle{image.Point{0, 0}, image.Point{p.opt.Size, p.opt.Size}}, theme)
 
-	p.drawBackground(img)
+	p.drawBackground(img, theme)
 
 	if err := p.drawSubject(img, style, theme); err != nil {
 		return nil, err
@@ -120,10 +121,14 @@ func (p *Portrait) draw(stl string, thm string, eff string) (*image.Paletted, er
 	return img, nil
 }
 
-func (p *Portrait) drawBackground(img *image.Paletted) {
+func (p *Portrait) drawBackground(img *image.Paletted, theme []color.Color) {
 	for x := 0; x < p.opt.Size; x++ {
 		for y := 0; y < p.opt.Size; y++ {
-			img.Set(x, y, p.opt.BackgroundColor)
+			img.Set(
+				x,
+				y,
+				theme[len(theme)-1],
+			)
 		}
 	}
 }

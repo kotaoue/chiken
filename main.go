@@ -164,6 +164,7 @@ func reOutputs() error {
 			*theme = defaultTheme
 			*style = defaultStyle
 			*format = defaultFormat
+			*effect = defaultEffect
 			*background = defaultBackground
 			*multiple = defaultMultiple
 			*delay = defaultDelay
@@ -176,6 +177,8 @@ func reOutputs() error {
 					*theme = strings.TrimPrefix(v, "-t=")
 				case strings.HasPrefix(v, "-f="):
 					*format = strings.TrimPrefix(v, "-f=")
+				case strings.HasPrefix(v, "-e="):
+					*effect = strings.TrimPrefix(v, "-e=")
 				case strings.HasPrefix(v, "-b="):
 					*background = strings.TrimPrefix(v, "-b=")
 				case strings.HasPrefix(v, "-m="):
