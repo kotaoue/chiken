@@ -105,8 +105,8 @@ func (p *Portrait) draw(stl string, thm string, eff string) (*image.Paletted, er
 	}
 	theme = append(theme, *p.opt.BackgroundColor)
 
-	effect := NewEffect(theme)
-	theme, err = effect.Apply(eff)
+	effect := NewEffect(style, theme)
+	style, theme, err = effect.Apply(eff)
 	if err != nil {
 		return nil, err
 	}
