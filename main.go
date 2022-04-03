@@ -105,10 +105,11 @@ func printReference() {
 	alt = strings.TrimSuffix(alt, fmt.Sprintf(".%s", *format))
 
 	fmt.Printf(
-		"|%s|%s|%s|%d*%d|%s|![%s](%s)|\n",
+		"|%s|%s|%s|%s|%d*%d|%s|![%s](%s)|\n",
 		printArgs(),
 		*theme,
 		*style,
+		*effect,
 		size,
 		size,
 		*background,
@@ -228,10 +229,10 @@ func reOutputs() error {
 			}
 		}
 
-		switch fs.Text() {
-		case "## Args Example":
+		switch {
+		case fs.Text() == "## Args Example":
 			afterArgsLine = true
-		case "|---|---|---|---|---|---|":
+		case strings.HasPrefix(fs.Text(), "|---"):
 			afterHyphenLine = true
 		}
 	}
