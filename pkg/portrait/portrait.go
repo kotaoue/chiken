@@ -1,7 +1,6 @@
 package portrait
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/gif"
@@ -25,9 +24,11 @@ type Options struct {
 	Format          string
 	Delay           int
 	FileName        string
+	Verbose         bool
 }
 
 func NewPortrait(o Options) *Portrait {
+	verbose = o.Verbose
 	return &Portrait{opt: o}
 }
 
@@ -60,7 +61,6 @@ func (p *Portrait) encodeGif() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(thms)
 
 	var images []*image.Paletted
 	var delays []int
@@ -68,7 +68,7 @@ func (p *Portrait) encodeGif() error {
 
 	for _, thm := range strings.Split(thms, "-") {
 		for _, stl := range strings.Split(p.opt.Style, "-") {
-			fmt.Printf("style:%s theme:%s\n", stl, thm)
+			vPrintf("style:%s theme:%s\n", stl, thm)
 			img, err := p.draw(stl, thm, p.opt.Effect)
 			if err != nil {
 				return err
@@ -135,10 +135,10 @@ func (p *Portrait) drawBackground(img *image.Paletted, theme []color.Color) {
 
 func (p *Portrait) drawSubject(img *image.Paletted, subject [][]int, theme []color.Color) error {
 	for y := 0; y < p.opt.BaseSize; y++ {
-		fmt.Print("{")
+		vPrint("{")
 		for x := 0; x < p.opt.BaseSize; x++ {
 			i := subject[y][x]
-			fmt.Print(i)
+			vPrint(i)
 
 			if i != 0 {
 				for my := 0; my < p.opt.Multiple; my++ {
@@ -148,7 +148,7 @@ func (p *Portrait) drawSubject(img *image.Paletted, subject [][]int, theme []col
 				}
 			}
 		}
-		fmt.Println("}")
+		vPrintln("}")
 	}
 
 	return nil
