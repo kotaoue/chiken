@@ -3,6 +3,7 @@ package portrait
 import (
 	"errors"
 	"image/color"
+	"strings"
 )
 
 const (
@@ -18,7 +19,20 @@ func NewEffect(thm []color.Color) *Effect {
 	return &Effect{theme: thm}
 }
 
-func (e Effect) Apply(effect string) ([]color.Color, error) {
+func (e Effect) Apply(effects string) ([]color.Color, error) {
+	for _, effect := range strings.Split(effects, "-") {
+		theme, err := e.apply(effect)
+		if err != nil {
+			return nil, err
+		}
+
+		e.theme = theme
+	}
+
+	return e.theme, nil
+}
+
+func (e Effect) apply(effect string) ([]color.Color, error) {
 	if effect != "" {
 		switch effect {
 		case Negative:
