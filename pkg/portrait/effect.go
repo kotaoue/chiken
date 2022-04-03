@@ -2,7 +2,6 @@ package portrait
 
 import (
 	"errors"
-	"fmt"
 	"image/color"
 )
 
@@ -42,7 +41,7 @@ func (e Effect) negative() []color.Color {
 			B: uint8(^b),
 			A: uint8(a),
 		}
-		fmt.Printf("%3v -> %3v\n", v, e.theme[k])
+		vPrintf("%3v -> %3v\n", v, e.theme[k])
 	}
 	return e.theme
 }
@@ -57,7 +56,7 @@ func (e Effect) grayscale() []color.Color {
 			B: uint8(gray),
 			A: uint8(a),
 		}
-		fmt.Printf("%3v -> %3v\n", v, e.theme[k])
+		vPrintf("%3v -> %3v\n", v, e.theme[k])
 	}
 	return e.theme
 }

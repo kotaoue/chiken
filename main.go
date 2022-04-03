@@ -32,6 +32,7 @@ var (
 	background = flag.String("b", defaultBackground, "background color. set with hex. example #ffffff. empty is transparent")
 	multiple   = flag.Int("m", defaultMultiple, "value to be multiplied by 32")
 	delay      = flag.Int("d", defaultDelay, "delay time for gif")
+	verbose    = flag.Bool("v", false, "printing verbose output")
 	dump       = flag.Bool("dump", false, "re encode from Args Example on README")
 	size       int
 	baseSize   int
@@ -91,6 +92,7 @@ func encode(c *color.RGBA) error {
 			Effect:          *effect,
 			Delay:           *delay,
 			FileName:        fileName(),
+			Verbose:         *verbose,
 		},
 	)
 
