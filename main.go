@@ -104,11 +104,9 @@ func printReference() {
 	alt = strings.TrimPrefix(alt, "img/")
 	alt = strings.TrimSuffix(alt, fmt.Sprintf(".%s", *format))
 
-	args := strings.Join(os.Args[1:], " ")
-
 	fmt.Printf(
 		"|%s|%s|%s|%d*%d|%s|![%s](%s)|\n",
-		strings.ReplaceAll(args, "-dump", ""),
+		printArgs(),
 		*theme,
 		*style,
 		size,
@@ -117,6 +115,33 @@ func printReference() {
 		alt,
 		fileName(),
 	)
+}
+
+func printArgs() string {
+	var args []string
+
+	if *format != defaultFormat {
+		args = append(args, fmt.Sprintf("-f=%s", *format))
+	}
+	if *theme != defaultTheme {
+		args = append(args, fmt.Sprintf("-t=%s", *theme))
+	}
+	if *style != defaultStyle {
+		args = append(args, fmt.Sprintf("-s=%s", *style))
+	}
+	if *effect != defaultEffect {
+		args = append(args, fmt.Sprintf("-e=%s", *effect))
+	}
+	if *background != defaultBackground {
+		args = append(args, fmt.Sprintf("-b=%s", *background))
+	}
+	if *delay != defaultDelay {
+		args = append(args, fmt.Sprintf("-d=%d", *delay))
+	}
+	if *multiple != defaultMultiple {
+		args = append(args, fmt.Sprintf("-m=%d", *multiple))
+	}
+	return strings.Join(args, " ")
 }
 
 func fileName() string {
