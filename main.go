@@ -149,19 +149,19 @@ func fileName() string {
 	dir := "img"
 	name := *theme
 
-	if *style != portrait.BasicStyle {
+	if *style != defaultStyle {
 		name = fmt.Sprintf("%s_%s", name, *style)
 	}
-	if *effect != "" {
+	if *effect != defaultEffect {
 		name = fmt.Sprintf("%s_%s", name, *effect)
 	}
-	if *multiple > 1 {
+	if *multiple != defaultMultiple {
 		name = fmt.Sprintf("%s_%d", name, *multiple)
 	}
-	if *background != "transparent" {
+	if *background != defaultBackground {
 		name = fmt.Sprintf("%s_%s", name, strings.ReplaceAll(*background, "#", ""))
 	}
-	if *delay > 0 {
+	if *delay != defaultDelay {
 		name = fmt.Sprintf("%s_delay%d", name, *delay)
 	}
 	return fmt.Sprintf("%s/%s.%s", dir, name, *format)
