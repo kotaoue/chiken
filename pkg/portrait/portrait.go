@@ -62,21 +62,28 @@ func (p *Portrait) encodeGif() error {
 		return err
 	}
 
+	effs, err := Effect{}.Adjust(p.opt.Effect, p.opt.BaseSize)
+	if err != nil {
+		return err
+	}
+
 	var images []*image.Paletted
 	var delays []int
 	var disposals []byte
 
-	for _, thm := range strings.Split(thms, "-") {
-		for _, stl := range strings.Split(p.opt.Style, "-") {
-			vPrintf("style:%s theme:%s\n", stl, thm)
-			img, err := p.draw(stl, thm, p.opt.Effect)
-			if err != nil {
-				return err
-			}
+	for _, eff := range strings.Split(effs, "-") {
+		for _, thm := range strings.Split(thms, "-") {
+			for _, stl := range strings.Split(p.opt.Style, "-") {
+				vPrintf("style:%s theme:%s\n", stl, thm)
+				img, err := p.draw(stl, thm, eff)
+				if err != nil {
+					return err
+				}
 
-			images = append(images, img)
-			delays = append(delays, p.opt.Delay)
-			disposals = append(disposals, gif.DisposalPrevious)
+				images = append(images, img)
+				delays = append(delays, p.opt.Delay)
+				disposals = append(disposals, gif.DisposalPrevious)
+			}
 		}
 	}
 
@@ -105,7 +112,7 @@ func (p *Portrait) draw(stl string, thm string, eff string) (*image.Paletted, er
 	}
 	theme = append(theme, *p.opt.BackgroundColor)
 
-	effect := NewEffect(style, theme)
+	effect := NewEffect(style, theme, p.opt.BaseSize)
 	style, theme, err = effect.Apply(eff)
 	if err != nil {
 		return nil, err
