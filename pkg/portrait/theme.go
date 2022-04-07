@@ -31,6 +31,7 @@ const (
 	Player2Theme    = "player2"
 	Player3Theme    = "player3"
 	Player4Theme    = "player4"
+	Player5Theme    = "player5"
 )
 
 type Theme struct{}
@@ -100,6 +101,8 @@ func (t Theme) Get(theme string) ([]color.Color, error) {
 		return t.player3(), nil
 	case Player4Theme:
 		return t.player4(), nil
+	case Player5Theme:
+		return t.player5(), nil
 	}
 	return nil, errors.New("not exist theme")
 }
@@ -468,6 +471,23 @@ func (Theme) player4() []color.Color {
 		color.RGBA{196, 196, 196, 255}, // サブカラー 影
 		color.RGBA{255, 255, 0, 255},   // トサカ
 		color.RGBA{128, 128, 0, 255},   // トサカ ハイライト
+		color.RGBA{96, 96, 0, 255},     // トサカ 影
+		color.RGBA{255, 255, 0, 255},   // くちばし
+		color.RGBA{255, 255, 255, 255}, // くちばし ハイライト
+		color.RGBA{255, 255, 0, 255},   // 足
+	}
+}
+
+func (Theme) player5() []color.Color {
+	return []color.Color{
+		color.RGBA{0, 0, 0, 0},         // 背景色
+		color.RGBA{0, 0, 0, 255},       // 主線
+		color.RGBA{255, 255, 255, 255}, // メインカラー
+		color.RGBA{196, 196, 196, 255}, // メインカラー 影
+		color.RGBA{255, 255, 255, 255}, // サブカラー
+		color.RGBA{196, 196, 196, 255}, // サブカラー 影
+		color.RGBA{0, 255, 255, 255},   // トサカ
+		color.RGBA{0, 128, 128, 255},   // トサカ ハイライト
 		color.RGBA{96, 96, 0, 255},     // トサカ 影
 		color.RGBA{255, 255, 0, 255},   // くちばし
 		color.RGBA{255, 255, 255, 255}, // くちばし ハイライト

@@ -44,6 +44,7 @@ go run main.go -s=walk
 |-t=player2|player2|basic||32*32|transparent|![player2](img/player2.png)|
 |-t=player3|player3|basic||32*32|transparent|![player3](img/player3.png)|
 |-t=player4|player4|basic||32*32|transparent|![player4](img/player4.png)|
+|-t=player5|player5|basic||32*32|transparent|![player5](img/player5.png)|
 |-e=negative|white|basic|negative|32*32|transparent|![white_negative](img/white_negative.png)|
 |-e=grayscale|white|basic|grayscale|32*32|transparent|![white_grayscale](img/white_grayscale.png)|
 |-e=negative-grayscale|white|basic|negative-grayscale|32*32|transparent|![white_negative-grayscale](img/white_negative-grayscale.png)|
