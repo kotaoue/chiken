@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"image/color"
 	"math"
+	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -33,6 +35,7 @@ const (
 	Player4Theme    = "player4"
 	Player5Theme    = "player5"
 	VividTheme      = "vivid"
+	RandomTheme     = "random"
 )
 
 type Theme struct{}
@@ -106,6 +109,8 @@ func (t Theme) Get(theme string) ([]color.Color, error) {
 		return t.player5(), nil
 	case VividTheme:
 		return t.vivid(), nil
+	case RandomTheme:
+		return t.random(), nil
 	}
 	return nil, errors.New("not exist theme")
 }
@@ -513,4 +518,21 @@ func (Theme) vivid() []color.Color {
 		color.RGBA{255, 255, 0, 255},   // くちばし ハイライト
 		color.RGBA{255, 255, 0, 255},   // 足
 	}
+}
+
+func (t Theme) random() []color.Color {
+	cs := []color.Color{
+		color.RGBA{0, 0, 0, 0}, // 背景色
+	}
+	rand.Seed(time.Now().UnixNano())
+	for i := 1; i < len(t.basic()); i++ {
+		c := color.RGBA{
+			uint8(rand.Intn(255)),
+			uint8(rand.Intn(255)),
+			uint8(rand.Intn(255)),
+			255,
+		}
+		cs = append(cs, c)
+	}
+	return cs
 }
