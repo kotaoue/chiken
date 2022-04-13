@@ -47,6 +47,8 @@ go run main.go -s=walk
 |-t=player5|player5|basic||32*32|transparent|![player5](img/player5.png)|
 |-t=vivid|vivid|basic||32*32|transparent|![vivid](img/vivid.png)|
 |-t=random|random|basic||32*32|transparent|![random](img/random.png)|
+|-t=random -n=random1|random|basic||32*32|transparent|![random1](img/random1.png)|
+|-t=random -n=random2|random|basic||32*32|transparent|![random2](img/random2.png)|
 |-e=negative|white|basic|negative|32*32|transparent|![white_negative](img/white_negative.png)|
 |-e=grayscale|white|basic|grayscale|32*32|transparent|![white_grayscale](img/white_grayscale.png)|
 |-e=negative-grayscale|white|basic|negative-grayscale|32*32|transparent|![white_negative-grayscale](img/white_negative-grayscale.png)|

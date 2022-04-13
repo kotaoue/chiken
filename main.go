@@ -20,6 +20,7 @@ const (
 	defaultFormat     = "png"
 	defaultEffect     = ""
 	defaultBackground = "transparent"
+	defaultName       = ""
 	defaultMultiple   = 1
 	defaultDelay      = 0
 )
@@ -30,6 +31,7 @@ var (
 	format     = flag.String("f", defaultFormat, "format of output image")
 	effect     = flag.String("e", defaultEffect, "set visual effects")
 	background = flag.String("b", defaultBackground, "background color. set with hex. example #ffffff. empty is transparent")
+	name       = flag.String("n", defaultName, "name of output image")
 	multiple   = flag.Int("m", defaultMultiple, "value to be multiplied by 32")
 	delay      = flag.Int("d", defaultDelay, "delay time for gif")
 	verbose    = flag.Bool("v", false, "printing verbose output")
@@ -142,11 +144,18 @@ func printArgs() string {
 	if *multiple != defaultMultiple {
 		args = append(args, fmt.Sprintf("-m=%d", *multiple))
 	}
+	if *name != defaultName {
+		args = append(args, fmt.Sprintf("-n=%s", *name))
+	}
 	return strings.Join(args, " ")
 }
 
 func fileName() string {
 	dir := "img"
+	if *name != "" {
+		return fmt.Sprintf("%s/%s.%s", dir, *name, *format)
+	}
+
 	name := *theme
 
 	if *style != defaultStyle {
@@ -194,6 +203,7 @@ func reOutputs() error {
 			*format = defaultFormat
 			*effect = defaultEffect
 			*background = defaultBackground
+			*name = defaultName
 			*multiple = defaultMultiple
 			*delay = defaultDelay
 
@@ -209,6 +219,8 @@ func reOutputs() error {
 					*effect = strings.TrimPrefix(v, "-e=")
 				case strings.HasPrefix(v, "-b="):
 					*background = strings.TrimPrefix(v, "-b=")
+				case strings.HasPrefix(v, "-n="):
+					*name = strings.TrimPrefix(v, "-n=")
 				case strings.HasPrefix(v, "-m="):
 					i, err := strconv.Atoi(strings.TrimPrefix(v, "-m="))
 					if err != nil {
