@@ -151,8 +151,8 @@ func (e Effect) downLoop(s string) error {
 	}
 
 	style := make([][]int, len(e.style))
-	for y := len(style) - 1; y >= 0; y-- {
-		style[y] = e.style[(y+step)%(len(e.style))]
+	for y := 0; y < len(style); y++ {
+		style[(y+step)%(len(e.style))] = e.style[y]
 	}
 
 	copy(e.style, style)
