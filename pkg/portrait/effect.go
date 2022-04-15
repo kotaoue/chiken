@@ -14,6 +14,7 @@ const (
 	Grayscale = "grayscale"
 	RightLoop = "rightLoop"
 	LeftLoop  = "leftLoop"
+	UpLoop    = "upLoop"
 )
 
 type Effect struct {
@@ -34,6 +35,8 @@ func (e Effect) Adjust(effects string, size int) (string, error) {
 		return e.splitLoop(RightLoop, effects, size)
 	case strings.HasPrefix(effects, LeftLoop):
 		return e.splitLoop(LeftLoop, effects, size)
+	case strings.HasPrefix(effects, UpLoop):
+		return e.splitLoop(UpLoop, effects, size)
 	}
 
 	return effects, nil
@@ -68,6 +71,8 @@ func (e Effect) apply(effect string) error {
 		return e.rightLoop(effect)
 	case strings.HasPrefix(effect, LeftLoop):
 		return e.leftLoop(effect)
+	case strings.HasPrefix(effect, UpLoop):
+		return e.upLoop(effect)
 	}
 
 	if effect != "" {
@@ -116,6 +121,21 @@ func (e Effect) leftLoop(s string) error {
 		}
 		e.style[y] = row
 	}
+	return nil
+}
+
+func (e Effect) upLoop(s string) error {
+	step, err := strconv.Atoi(strings.TrimPrefix(s, UpLoop))
+	if err != nil || step < 0 {
+		return fmt.Errorf("effect expects a format of upLoop{int}. but '%s' was specified", s)
+	}
+
+	style := make([][]int, len(e.style))
+	for y := 0; y < len(style); y++ {
+		style[y] = e.style[(y+step)%(len(e.style))]
+	}
+
+	copy(e.style, style)
 	return nil
 }
 
