@@ -56,6 +56,7 @@ go run main.go -s=walk
 |-f=gif -e=rightLoop4|white|basic|rightLoop4|32*32|transparent|![white_rightLoop4](img/white_rightLoop4.gif)|
 |-f=gif -e=leftLoop1|white|basic|leftLoop1|32*32|transparent|![white_leftLoop1](img/white_leftLoop1.gif)|
 |-f=gif -e=upLoop1|white|basic|upLoop1|32*32|transparent|![white_upLoop1](img/white_upLoop1.gif)|
+|-f=gif -e=downLoop1|white|basic|downLoop1|32*32|transparent|![white_downLoop1](img/white_downLoop1.gif)|
 |-e=mirror|white|basic|mirror|32*32|transparent|![white_mirror](img/white_mirror.png)|
 |-f=gif -t=white-player2-player3-player4|white-player2-player3-player4|basic||32*32|transparent|![white-player2-player3-player4](img/white-player2-player3-player4.gif)|
 |-t=party1|party1|basic||32*32|transparent|![party1](img/party1.png)|
