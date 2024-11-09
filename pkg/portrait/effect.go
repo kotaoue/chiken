@@ -92,7 +92,9 @@ func (e Effect) apply(effect string) error {
 		case Grayscale:
 			e.grayscale()
 		case RotateClockwise:
+			fmt.Printf("Before rotation: %v\n", e.style)
 			e.rotateClockwise()
+			fmt.Printf("After rotation: %v\n", e.style)
 		case RotateCounterClockwise:
 			e.rotateCounterClockwise()
 		default:
@@ -204,30 +206,37 @@ func (e Effect) grayscale() {
 	}
 }
 
-func (e Effect) rotateClockwise() {
-	newStyle := make([][]int, len(e.style[0]))
-	for i := range newStyle {
-		newStyle[i] = make([]int, len(e.style))
-	}
+func (e *Effect) rotateClockwise() {
+    // 元の2Dスライスの高さと幅を取得
+    oldHeight := len(e.style)
+    oldWidth := len(e.style[0])
 
-	for y, row := range e.style {
-		for x, val := range row {
-			newStyle[x][len(e.style)-y-1] = val
-		}
-	}
+    // 新しい2Dスライスを初期化 (回転後は高さと幅が入れ替わる)
+    newStyle := make([][]int, oldWidth)
+    for i := range newStyle {
+        newStyle[i] = make([]int, oldHeight)
+    }
 
-	e.style = newStyle
+    // 時計回りに90度回転させるマッピング
+    for y := 0; y < oldHeight; y++ {
+        for x := 0; x < oldWidth; x++ {
+            newStyle[x][oldHeight-1-y] = e.style[y][x]
+        }
+    }
+
+    // 新しいスタイルを適用
+    e.style = newStyle
 }
 
-func (e Effect) rotateCounterClockwise() {
+func (e *Effect) rotateCounterClockwise() {
 	newStyle := make([][]int, len(e.style[0]))
 	for i := range newStyle {
 		newStyle[i] = make([]int, len(e.style))
 	}
 
-	for y, row := range e.style {
-		for x, val := range row {
-			newStyle[len(e.style[0])-x-1][y] = val
+	for y := 0; y < len(e.style); y++ {
+		for x := 0; x < len(e.style[0]); x++ {
+			newStyle[len(e.style[0])-1-x][y] = e.style[y][x]
 		}
 	}
 
