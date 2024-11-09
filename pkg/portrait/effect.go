@@ -16,6 +16,9 @@ const (
 	LeftLoop  = "leftLoop"
 	UpLoop    = "upLoop"
 	DownLoop  = "downLoop"
+	RotateClockwise = "rotateClockwise"
+	RotateCounterClockwise = "rotateCounterClockwise"
+	
 )
 
 type Effect struct {
@@ -88,6 +91,10 @@ func (e Effect) apply(effect string) error {
 			e.negative()
 		case Grayscale:
 			e.grayscale()
+		case RotateClockwise:
+			e.rotateClockwise()
+		case RotateCounterClockwise:
+			e.rotateCounterClockwise()
 		default:
 			return errors.New("not exist effect")
 		}
@@ -195,4 +202,34 @@ func (e Effect) grayscale() {
 		}
 		vPrintf("%3v -> %3v\n", v, e.theme[k])
 	}
+}
+
+func (e Effect) rotateClockwise() {
+	newStyle := make([][]int, len(e.style[0]))
+	for i := range newStyle {
+		newStyle[i] = make([]int, len(e.style))
+	}
+
+	for y, row := range e.style {
+		for x, val := range row {
+			newStyle[x][len(e.style)-y-1] = val
+		}
+	}
+
+	e.style = newStyle
+}
+
+func (e Effect) rotateCounterClockwise() {
+	newStyle := make([][]int, len(e.style[0]))
+	for i := range newStyle {
+		newStyle[i] = make([]int, len(e.style))
+	}
+
+	for y, row := range e.style {
+		for x, val := range row {
+			newStyle[len(e.style[0])-x-1][y] = val
+		}
+	}
+
+	e.style = newStyle
 }
