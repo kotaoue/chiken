@@ -33,7 +33,7 @@ func NewEffect(stl [][]int, thm []color.Color, size int) *Effect {
 	}
 }
 
-func (e Effect) Adjust(effects string, size int) (string, error) {
+func (e *Effect) Adjust(effects string, size int) (string, error) {
 	switch {
 	case strings.HasPrefix(effects, RightLoop):
 		return e.splitLoop(RightLoop, effects, size)
@@ -48,7 +48,7 @@ func (e Effect) Adjust(effects string, size int) (string, error) {
 	return effects, nil
 }
 
-func (e Effect) splitLoop(prefix, effects string, size int) (string, error) {
+func (e *Effect) splitLoop(prefix, effects string, size int) (string, error) {
 	step, err := strconv.Atoi(strings.TrimPrefix(effects, prefix))
 	if err != nil || step <= 0 {
 		return "", fmt.Errorf("effects expects a format of %s{int}. but '%s' was specified", effects, prefix)
@@ -61,7 +61,7 @@ func (e Effect) splitLoop(prefix, effects string, size int) (string, error) {
 	return strings.Join(ss, "-"), nil
 }
 
-func (e Effect) Apply(effects string) ([][]int, []color.Color, error) {
+func (e *Effect) Apply(effects string) ([][]int, []color.Color, error) {
 	for _, effect := range strings.Split(effects, "-") {
 		if err := e.apply(effect); err != nil {
 			return nil, nil, err
@@ -71,7 +71,7 @@ func (e Effect) Apply(effects string) ([][]int, []color.Color, error) {
 	return e.style, e.theme, nil
 }
 
-func (e Effect) apply(effect string) error {
+func (e *Effect) apply(effect string) error {
 	switch {
 	case strings.HasPrefix(effect, RightLoop):
 		return e.rightLoop(effect)
@@ -104,7 +104,7 @@ func (e Effect) apply(effect string) error {
 	return nil
 }
 
-func (e Effect) rightLoop(s string) error {
+func (e *Effect) rightLoop(s string) error {
 	step, err := strconv.Atoi(strings.TrimPrefix(s, RightLoop))
 	if err != nil || step < 0 {
 		return fmt.Errorf("effect expects a format of rightLoop{int}. but '%s' was specified", s)
@@ -121,7 +121,7 @@ func (e Effect) rightLoop(s string) error {
 	return nil
 }
 
-func (e Effect) leftLoop(s string) error {
+func (e *Effect) leftLoop(s string) error {
 	step, err := strconv.Atoi(strings.TrimPrefix(s, LeftLoop))
 	if err != nil || step < 0 {
 		return fmt.Errorf("effect expects a format of leftLoop{int}. but '%s' was specified", s)
@@ -138,7 +138,7 @@ func (e Effect) leftLoop(s string) error {
 	return nil
 }
 
-func (e Effect) upLoop(s string) error {
+func (e *Effect) upLoop(s string) error {
 	step, err := strconv.Atoi(strings.TrimPrefix(s, UpLoop))
 	if err != nil || step < 0 {
 		return fmt.Errorf("effect expects a format of upLoop{int}. but '%s' was specified", s)
@@ -153,7 +153,7 @@ func (e Effect) upLoop(s string) error {
 	return nil
 }
 
-func (e Effect) downLoop(s string) error {
+func (e *Effect) downLoop(s string) error {
 	step, err := strconv.Atoi(strings.TrimPrefix(s, DownLoop))
 	if err != nil || step < 0 {
 		return fmt.Errorf("effect expects a format of upLoop{int}. but '%s' was specified", s)
@@ -168,7 +168,7 @@ func (e Effect) downLoop(s string) error {
 	return nil
 }
 
-func (e Effect) mirror() {
+func (e *Effect) mirror() {
 	for y, dots := range e.style {
 		row := make([]int, len(dots))
 
@@ -179,7 +179,7 @@ func (e Effect) mirror() {
 	}
 }
 
-func (e Effect) negative() {
+func (e *Effect) negative() {
 	for k, v := range e.theme {
 		r, g, b, a := v.RGBA()
 		e.theme[k] = color.RGBA{
@@ -192,7 +192,7 @@ func (e Effect) negative() {
 	}
 }
 
-func (e Effect) grayscale() {
+func (e *Effect) grayscale() {
 	for k, v := range e.theme {
 		r, g, b, a := v.RGBA()
 		gray := float64(r)*0.3 + float64(g)*0.59 + float64(b)*0.11
@@ -207,24 +207,20 @@ func (e Effect) grayscale() {
 }
 
 func (e *Effect) rotateClockwise() {
-    // 元の2Dスライスの高さと幅を取得
     oldHeight := len(e.style)
     oldWidth := len(e.style[0])
 
-    // 新しい2Dスライスを初期化 (回転後は高さと幅が入れ替わる)
     newStyle := make([][]int, oldWidth)
     for i := range newStyle {
         newStyle[i] = make([]int, oldHeight)
     }
 
-    // 時計回りに90度回転させるマッピング
     for y := 0; y < oldHeight; y++ {
         for x := 0; x < oldWidth; x++ {
             newStyle[x][oldHeight-1-y] = e.style[y][x]
         }
     }
 
-    // 新しいスタイルを適用
     e.style = newStyle
 }
 

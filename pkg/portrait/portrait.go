@@ -62,7 +62,8 @@ func (p *Portrait) encodeGif() error {
 		return err
 	}
 
-	effs, err := Effect{}.Adjust(p.opt.Effect, p.opt.BaseSize)
+	eff := NewEffect([][]int{}, []color.Color{}, p.opt.BaseSize)
+	effs, err := eff.Adjust(p.opt.Effect, p.opt.BaseSize)
 	if err != nil {
 		return err
 	}
