@@ -52,6 +52,8 @@ go run main.go -s=walk
 |-e=negative|white|basic|negative|32*32|transparent|![white_negative](img/white_negative.png)|
 |-e=grayscale|white|basic|grayscale|32*32|transparent|![white_grayscale](img/white_grayscale.png)|
 |-e=negative-grayscale|white|basic|negative-grayscale|32*32|transparent|![white_negative-grayscale](img/white_negative-grayscale.png)|
+|-e=rotateClockwise|white|basic|rotateClockwise|32*32|transparent|![white_rotateClockwise](img/white_rotateClockwise.png)|
+|-e=rotateCounterClockwise|white|basic|rotateCounterClockwise|32*32|transparent|![white_rotateCounterClockwise](img/white_rotateCounterClockwise.png)|
 |-f=gif -e=rightLoop1|white|basic|rightLoop1|32*32|transparent|![white_rightLoop1](img/white_rightLoop1.gif)|
 |-f=gif -e=rightLoop4|white|basic|rightLoop4|32*32|transparent|![white_rightLoop4](img/white_rightLoop4.gif)|
 |-f=gif -e=leftLoop1|white|basic|leftLoop1|32*32|transparent|![white_leftLoop1](img/white_leftLoop1.gif)|

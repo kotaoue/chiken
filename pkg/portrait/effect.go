@@ -92,9 +92,7 @@ func (e *Effect) apply(effect string) error {
 		case Grayscale:
 			e.grayscale()
 		case RotateClockwise:
-			fmt.Printf("Before rotation: %v\n", e.style)
 			e.rotateClockwise()
-			fmt.Printf("After rotation: %v\n", e.style)
 		case RotateCounterClockwise:
 			e.rotateCounterClockwise()
 		default:
@@ -207,34 +205,31 @@ func (e *Effect) grayscale() {
 }
 
 func (e *Effect) rotateClockwise() {
-    oldHeight := len(e.style)
-    oldWidth := len(e.style[0])
-
-    newStyle := make([][]int, oldWidth)
-    for i := range newStyle {
-        newStyle[i] = make([]int, oldHeight)
+    style := make([][]int, len(e.style[0]))
+    for i := range style {
+        style[i] = make([]int, len(e.style))
     }
 
-    for y := 0; y < oldHeight; y++ {
-        for x := 0; x < oldWidth; x++ {
-            newStyle[x][oldHeight-1-y] = e.style[y][x]
+    for y := 0; y < len(e.style); y++ {
+        for x := 0; x < len(e.style[0]); x++ {
+            style[x][len(e.style)-1-y] = e.style[y][x]
         }
     }
 
-    e.style = newStyle
+    e.style = style
 }
 
 func (e *Effect) rotateCounterClockwise() {
-	newStyle := make([][]int, len(e.style[0]))
-	for i := range newStyle {
-		newStyle[i] = make([]int, len(e.style))
+	style := make([][]int, len(e.style[0]))
+	for i := range style {
+		style[i] = make([]int, len(e.style))
 	}
 
 	for y := 0; y < len(e.style); y++ {
 		for x := 0; x < len(e.style[0]); x++ {
-			newStyle[len(e.style[0])-1-x][y] = e.style[y][x]
+			style[len(e.style[0])-1-x][y] = e.style[y][x]
 		}
 	}
 
-	e.style = newStyle
+	e.style = style
 }
