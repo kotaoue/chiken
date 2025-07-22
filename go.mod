@@ -1,3 +1,3 @@
 module github.com/kotaoue/chiken
 
-go 1.17
+go 1.23
