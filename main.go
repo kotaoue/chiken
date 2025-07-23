@@ -26,25 +26,39 @@ const (
 )
 
 var (
-	theme      = flag.String("t", defaultTheme, "theme color of rooster")
-	style      = flag.String("s", defaultStyle, "style of rooster")
-	format     = flag.String("f", defaultFormat, "format of output image")
-	effect     = flag.String("e", defaultEffect, "set visual effects")
-	background = flag.String("b", defaultBackground, "background color. set with hex. example #ffffff. empty is transparent")
-	name       = flag.String("n", defaultName, "name of output image")
-	multiple   = flag.Int("m", defaultMultiple, "value to be multiplied by 32")
-	delay      = flag.Int("d", defaultDelay, "delay time for gif")
-	verbose    = flag.Bool("v", false, "printing verbose output")
-	dump       = flag.Bool("dump", false, "re encode from Args Example on README")
+	theme      *string
+	style      *string
+	format     *string
+	effect     *string
+	background *string
+	name       *string
+	multiple   *int
+	delay      *int
+	verbose    *bool
+	dump       *bool
 	size       int
 	baseSize   int
 )
+
+func setupFlags() {
+	theme = flag.String("t", defaultTheme, "theme color of rooster")
+	style = flag.String("s", defaultStyle, "style of rooster")
+	format = flag.String("f", defaultFormat, "format of output image")
+	effect = flag.String("e", defaultEffect, "set visual effects")
+	background = flag.String("b", defaultBackground, "background color. set with hex. example #ffffff. empty is transparent")
+	name = flag.String("n", defaultName, "name of output image")
+	multiple = flag.Int("m", defaultMultiple, "value to be multiplied by 32")
+	delay = flag.Int("d", defaultDelay, "delay time for gif")
+	verbose = flag.Bool("v", false, "printing verbose output")
+	dump = flag.Bool("dump", false, "re encode from Args Example on README")
+}
 
 func init() {
 	baseSize = 32
 }
 
 func main() {
+	setupFlags()
 	flag.Parse()
 	if err := Main(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
