@@ -41,12 +41,11 @@ var (
 )
 
 func init() {
-	flag.Parse()
-
 	baseSize = 32
 }
 
 func main() {
+	flag.Parse()
 	if err := Main(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
