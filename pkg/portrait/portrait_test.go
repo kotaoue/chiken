@@ -103,3 +103,56 @@ func TestVPrintf(t *testing.T) {
 	}()
 	vPrintf("test %s", "value")
 }
+
+func TestPortrait_Encode_Error(t *testing.T) {
+	// Test invalid file path for PNG
+	optsPng := Options{
+		Size:            32,
+		BaseSize:        32,
+		Multiple:        1,
+		Style:           "basic",
+		Theme:           "white",
+		BackgroundColor: &color.RGBA{R: 0, G: 0, B: 0, A: 255},
+		Format:          "png",
+		FileName:        "invalid/path/test.png",
+	}
+	pPng := NewPortrait(optsPng)
+	if err := pPng.Encode(); err == nil {
+		t.Error("Portrait.Encode() for png with invalid path should have failed")
+	}
+
+	// Test invalid file path for GIF
+	optsGif := Options{
+		Size:            32,
+		BaseSize:        32,
+		Multiple:        1,
+		Style:           "basic",
+		Theme:           "white",
+		BackgroundColor: &color.RGBA{R: 0, G: 0, B: 0, A: 255},
+		Format:          "gif",
+		FileName:        "invalid/path/test.gif",
+	}
+	pGif := NewPortrait(optsGif)
+	if err := pGif.Encode(); err == nil {
+		t.Error("Portrait.Encode() for gif with invalid path should have failed")
+	}
+
+	// Test invalid style
+	optsInvalidStyle := Options{
+		Style: "invalid",
+	}
+	pInvalidStyle := NewPortrait(optsInvalidStyle)
+	if err := pInvalidStyle.encodePng(); err == nil {
+		t.Error("encodePng with invalid style should have failed")
+	}
+
+	// Test invalid theme
+	optsInvalidTheme := Options{
+		Style: "basic",
+		Theme: "invalid",
+	}
+	pInvalidTheme := NewPortrait(optsInvalidTheme)
+	if err := pInvalidTheme.encodePng(); err == nil {
+		t.Error("encodePng with invalid theme should have failed")
+	}
+}

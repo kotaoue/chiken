@@ -110,6 +110,14 @@ func TestOutput(t *testing.T) {
 	if buf.String() == "" {
 		t.Error("output() should have printed something")
 	}
+
+	// Test with invalid background color
+	testWithFlags(t, []string{"chiken", "-b", "invalid"}, func() error {
+		if err := output(); err == nil {
+			t.Error("output() with invalid background should have failed")
+		}
+		return nil
+	})
 }
 
 func TestEncode(t *testing.T) {
