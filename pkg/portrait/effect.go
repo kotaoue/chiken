@@ -112,7 +112,7 @@ func (e *Effect) rightLoop(s string) error {
 		row := make([]int, len(dots))
 
 		for i := 0; i < len(dots); i++ {
-			row[(i+step)%(len(dots)-1)] = dots[i]
+			row[(i+step)%len(dots)] = dots[i]
 		}
 		e.style[y] = row
 	}
@@ -129,7 +129,7 @@ func (e *Effect) leftLoop(s string) error {
 		row := make([]int, len(dots))
 
 		for i := 0; i < len(dots); i++ {
-			row[i] = dots[(i+step)%(len(dots)-1)]
+			row[i] = dots[(i+step)%len(dots)]
 		}
 		e.style[y] = row
 	}
@@ -179,28 +179,30 @@ func (e *Effect) mirror() {
 
 func (e *Effect) negative() {
 	for k, v := range e.theme {
-		r, g, b, a := v.RGBA()
-		e.theme[k] = color.RGBA{
-			R: uint8(^r),
-			G: uint8(^g),
-			B: uint8(^b),
-			A: uint8(a),
+		if c, ok := v.(color.RGBA); ok {
+			e.theme[k] = color.RGBA{
+				R: ^c.R,
+				G: ^c.G,
+				B: ^c.B,
+				A: c.A,
+			}
+			vPrintf("%3v -> %3v\n", v, e.theme[k])
 		}
-		vPrintf("%3v -> %3v\n", v, e.theme[k])
 	}
 }
 
 func (e *Effect) grayscale() {
 	for k, v := range e.theme {
-		r, g, b, a := v.RGBA()
-		gray := float64(r)*0.3 + float64(g)*0.59 + float64(b)*0.11
-		e.theme[k] = color.RGBA{
-			R: uint8(gray),
-			G: uint8(gray),
-			B: uint8(gray),
-			A: uint8(a),
+		if c, ok := v.(color.RGBA); ok {
+			gray := float64(c.R)*0.3 + float64(c.G)*0.59 + float64(c.B)*0.11
+			e.theme[k] = color.RGBA{
+				R: uint8(gray),
+				G: uint8(gray),
+				B: uint8(gray),
+				A: c.A,
+			}
+			vPrintf("%3v -> %3v\n", v, e.theme[k])
 		}
-		vPrintf("%3v -> %3v\n", v, e.theme[k])
 	}
 }
 
