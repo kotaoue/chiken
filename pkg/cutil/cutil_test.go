@@ -14,15 +14,15 @@ func TestHexToColor(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "valid hex",
-			s:    "#ffffff",
-			want: &color.RGBA{R: 255, G: 255, B: 255, A: 255},
+			name:    "valid hex",
+			s:       "#ffffff",
+			want:    &color.RGBA{R: 255, G: 255, B: 255, A: 255},
 			wantErr: false,
 		},
 		{
-			name: "invalid hex",
-			s:    "invalid",
-			want: nil,
+			name:    "invalid hex",
+			s:       "invalid",
+			want:    nil,
 			wantErr: true,
 		},
 	}
