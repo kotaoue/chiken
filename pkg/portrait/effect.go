@@ -9,16 +9,15 @@ import (
 )
 
 const (
-	Mirror    = "mirror"
-	Negative  = "negative"
-	Grayscale = "grayscale"
-	RightLoop = "rightLoop"
-	LeftLoop  = "leftLoop"
-	UpLoop    = "upLoop"
-	DownLoop  = "downLoop"
-	RotateClockwise = "rotateClockwise"
+	Mirror                 = "mirror"
+	Negative               = "negative"
+	Grayscale              = "grayscale"
+	RightLoop              = "rightLoop"
+	LeftLoop               = "leftLoop"
+	UpLoop                 = "upLoop"
+	DownLoop               = "downLoop"
+	RotateClockwise        = "rotateClockwise"
 	RotateCounterClockwise = "rotateCounterClockwise"
-	
 )
 
 type Effect struct {
@@ -207,18 +206,18 @@ func (e *Effect) grayscale() {
 }
 
 func (e *Effect) rotateClockwise() {
-    style := make([][]int, len(e.style[0]))
-    for i := range style {
-        style[i] = make([]int, len(e.style))
-    }
+	style := make([][]int, len(e.style[0]))
+	for i := range style {
+		style[i] = make([]int, len(e.style))
+	}
 
-    for y := 0; y < len(e.style); y++ {
-        for x := 0; x < len(e.style[0]); x++ {
-            style[x][len(e.style)-1-y] = e.style[y][x]
-        }
-    }
+	for y := 0; y < len(e.style); y++ {
+		for x := 0; x < len(e.style[0]); x++ {
+			style[x][len(e.style)-1-y] = e.style[y][x]
+		}
+	}
 
-    e.style = style
+	e.style = style
 }
 
 func (e *Effect) rotateCounterClockwise() {
