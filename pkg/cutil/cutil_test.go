@@ -2,8 +2,9 @@ package cutil
 
 import (
 	"image/color"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHexToColor(t *testing.T) {
@@ -29,12 +30,12 @@ func TestHexToColor(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := HexToColor(tt.s)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("HexToColor() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("HexToColor() = %v, want %v", got, tt.want)
+			if tt.wantErr {
+				assert.Error(t, err)
+				assert.Nil(t, got)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
 			}
 		})
 	}
