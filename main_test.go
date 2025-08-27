@@ -57,7 +57,7 @@ func testWithFlags(t *testing.T, args []string, testFunc func() error) {
 	cmd.SetArgs(args[1:])
 	err := cmd.ParseFlags(args[1:])
 	require.NoError(t, err)
-	
+
 	err = testFunc()
 	assert.NoError(t, err)
 }
@@ -210,10 +210,10 @@ func TestFileName(t *testing.T) {
 func TestCheckFormat(t *testing.T) {
 	err := checkFormat("png")
 	assert.NoError(t, err, "checkFormat('png') should not fail")
-	
+
 	err = checkFormat("gif")
 	assert.NoError(t, err, "checkFormat('gif') should not fail")
-	
+
 	err = checkFormat("invalid")
 	assert.Error(t, err, "checkFormat('invalid') should fail")
 }

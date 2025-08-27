@@ -2,8 +2,9 @@ package portrait
 
 import (
 	"image/color"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestEffect_Apply(t *testing.T) {
@@ -140,15 +141,12 @@ func TestEffect_Apply(t *testing.T) {
 				theme: tt.fields.theme,
 			}
 			got, got1, err := e.Apply(tt.args.effects)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Effect.Apply() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Effect.Apply() got = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("Effect.Apply() got1 = %v, want %v", got1, tt.want1)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
+				assert.Equal(t, tt.want1, got1)
 			}
 		})
 	}
@@ -238,12 +236,11 @@ func TestEffect_Adjust(t *testing.T) {
 				theme: tt.fields.theme,
 			}
 			got, err := e.Adjust(tt.args.effects, tt.args.size)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Effect.Adjust() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("Effect.Adjust() = %v, want %v", got, tt.want)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
 			}
 		})
 	}

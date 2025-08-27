@@ -3,8 +3,9 @@ package portrait
 import (
 	"image/color"
 	"os"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewPortrait(t *testing.T) {
@@ -22,12 +23,8 @@ func TestNewPortrait(t *testing.T) {
 		Verbose:         true,
 	}
 	p := NewPortrait(opts)
-	if p == nil {
-		t.Fatal("NewPortrait() returned nil")
-	}
-	if !reflect.DeepEqual(p.opt, opts) {
-		t.Errorf("NewPortrait() opts = %v, want %v", p.opt, opts)
-	}
+	assert.NotNil(t, p, "NewPortrait() should not return nil")
+	assert.Equal(t, opts, p.opt, "NewPortrait() should set options correctly")
 }
 
 func TestPortrait_Encode(t *testing.T) {
@@ -44,9 +41,8 @@ func TestPortrait_Encode(t *testing.T) {
 		FileName:        "test.png",
 	}
 	pPng := NewPortrait(optsPng)
-	if err := pPng.Encode(); err != nil {
-		t.Errorf("Portrait.Encode() for png failed: %v", err)
-	}
+	err := pPng.Encode()
+	assert.NoError(t, err, "Portrait.Encode() for png should not fail")
 	os.Remove("test.png")
 
 	// Test GIF encoding
@@ -62,9 +58,8 @@ func TestPortrait_Encode(t *testing.T) {
 		FileName:        "test.gif",
 	}
 	pGif := NewPortrait(optsGif)
-	if err := pGif.Encode(); err != nil {
-		t.Errorf("Portrait.Encode() for gif failed: %v", err)
-	}
+	err = pGif.Encode()
+	assert.NoError(t, err, "Portrait.Encode() for gif should not fail")
 	os.Remove("test.gif")
 }
 
@@ -72,36 +67,27 @@ func TestVPrint(t *testing.T) {
 	verbose = true
 	// Since this function just wraps fmt.Print, we can't easily test its output.
 	// We'll just call it to ensure it doesn't panic.
-	defer func() {
-		if r := recover(); r != nil {
-			t.Errorf("vPrint panicked: %v", r)
-		}
-	}()
-	vPrint("test")
+	assert.NotPanics(t, func() {
+		vPrint("test")
+	}, "vPrint should not panic")
 }
 
 func TestVPrintln(t *testing.T) {
 	verbose = true
 	// Since this function just wraps fmt.Println, we can't easily test its output.
 	// We'll just call it to ensure it doesn't panic.
-	defer func() {
-		if r := recover(); r != nil {
-			t.Errorf("vPrintln panicked: %v", r)
-		}
-	}()
-	vPrintln("test")
+	assert.NotPanics(t, func() {
+		vPrintln("test")
+	}, "vPrintln should not panic")
 }
 
 func TestVPrintf(t *testing.T) {
 	verbose = true
 	// Since this function just wraps fmt.Printf, we can't easily test its output.
 	// We'll just call it to ensure it doesn't panic.
-	defer func() {
-		if r := recover(); r != nil {
-			t.Errorf("vPrintf panicked: %v", r)
-		}
-	}()
-	vPrintf("test %s", "value")
+	assert.NotPanics(t, func() {
+		vPrintf("test %s", "value")
+	}, "vPrintf should not panic")
 }
 
 func TestPortrait_Encode_Error(t *testing.T) {
@@ -117,9 +103,8 @@ func TestPortrait_Encode_Error(t *testing.T) {
 		FileName:        "invalid/path/test.png",
 	}
 	pPng := NewPortrait(optsPng)
-	if err := pPng.Encode(); err == nil {
-		t.Error("Portrait.Encode() for png with invalid path should have failed")
-	}
+	err := pPng.Encode()
+	assert.Error(t, err, "Portrait.Encode() for png with invalid path should fail")
 
 	// Test invalid file path for GIF
 	optsGif := Options{
@@ -133,18 +118,16 @@ func TestPortrait_Encode_Error(t *testing.T) {
 		FileName:        "invalid/path/test.gif",
 	}
 	pGif := NewPortrait(optsGif)
-	if err := pGif.Encode(); err == nil {
-		t.Error("Portrait.Encode() for gif with invalid path should have failed")
-	}
+	err = pGif.Encode()
+	assert.Error(t, err, "Portrait.Encode() for gif with invalid path should fail")
 
 	// Test invalid style
 	optsInvalidStyle := Options{
 		Style: "invalid",
 	}
 	pInvalidStyle := NewPortrait(optsInvalidStyle)
-	if err := pInvalidStyle.encodePng(); err == nil {
-		t.Error("encodePng with invalid style should have failed")
-	}
+	err = pInvalidStyle.encodePng()
+	assert.Error(t, err, "encodePng with invalid style should fail")
 
 	// Test invalid theme
 	optsInvalidTheme := Options{
@@ -152,7 +135,6 @@ func TestPortrait_Encode_Error(t *testing.T) {
 		Theme: "invalid",
 	}
 	pInvalidTheme := NewPortrait(optsInvalidTheme)
-	if err := pInvalidTheme.encodePng(); err == nil {
-		t.Error("encodePng with invalid theme should have failed")
-	}
+	err = pInvalidTheme.encodePng()
+	assert.Error(t, err, "encodePng with invalid theme should fail")
 }
