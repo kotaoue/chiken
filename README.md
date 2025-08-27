@@ -4,10 +4,10 @@ The icon of kotaoue
 ## Usage
 ```
 # basic
-go run main.go
+go run .
 
 # walk style
-go run main.go -s=walk
+go run . -s=walk
 ```
 
 ## Args Example
