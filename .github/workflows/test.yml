@@ -1,10 +1,7 @@
-name: Go
+name: Test
 
 on:
-  push:
-    branches: [main]
   pull_request:
-    branches: [main]
 
 jobs:
   build:
@@ -17,7 +14,16 @@ jobs:
         with:
           go-version: "1.24"
 
-      - name: Test with coverage
+      - name: Format check
         run: |
-          go test -coverprofile=coverage.out $(go list ./...)
-          go tool cover -func=coverage.out
+          if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
+            gofmt -s -l .
+            exit 1
+          fi
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test ./...
+
