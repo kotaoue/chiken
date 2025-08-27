@@ -2,12 +2,14 @@ package main
 
 import (
 	"bytes"
-	"flag"
 	"image/color"
-	"io/ioutil"
+	"io"
 	"os"
-	"strings"
 	"testing"
+
+	"github.com/spf13/cobra"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMain(m *testing.M) {
@@ -16,25 +18,48 @@ func TestMain(m *testing.M) {
 
 // testWithFlags creates an isolated environment for testing with flags
 func testWithFlags(t *testing.T, args []string, testFunc func() error) {
-	// Backup original os.Args and CommandLine
-	origArgs := os.Args
-	origCommandLine := flag.CommandLine
-	defer func() {
-		os.Args = origArgs
-		flag.CommandLine = origCommandLine
-	}()
-
-	// Set up new environment
-	os.Args = args
-	flag.CommandLine = flag.NewFlagSet(args[0], flag.ContinueOnError)
-	setupFlags()
-	if err := flag.CommandLine.Parse(args[1:]); err != nil {
-		t.Fatalf("Failed to parse flags: %v", err)
+	// Create a new command instance for testing
+	cmd := &cobra.Command{
+		Use: "chiken",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			if dump {
+				return reOutputs()
+			}
+			return output()
+		},
 	}
 
-	if err := testFunc(); err != nil {
-		t.Errorf("Test function failed: %v", err)
-	}
+	// Add flags
+	cmd.Flags().StringVarP(&theme, "theme", "t", defaultTheme, "theme color of rooster")
+	cmd.Flags().StringVarP(&style, "style", "s", defaultStyle, "style of rooster")
+	cmd.Flags().StringVarP(&format, "format", "f", defaultFormat, "format of output image")
+	cmd.Flags().StringVarP(&effect, "effect", "e", defaultEffect, "set visual effects")
+	cmd.Flags().StringVarP(&background, "background", "b", defaultBackground, "background color. set with hex. example #ffffff. empty is transparent")
+	cmd.Flags().StringVarP(&name, "name", "n", defaultName, "name of output image")
+	cmd.Flags().IntVarP(&multiple, "multiple", "m", defaultMultiple, "value to be multiplied by 32")
+	cmd.Flags().IntVarP(&delay, "delay", "d", defaultDelay, "delay time for gif")
+	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "printing verbose output")
+	cmd.Flags().BoolVar(&dump, "dump", false, "re encode from Args Example on README")
+
+	// Reset flags to defaults
+	theme = defaultTheme
+	style = defaultStyle
+	format = defaultFormat
+	effect = defaultEffect
+	background = defaultBackground
+	name = defaultName
+	multiple = defaultMultiple
+	delay = defaultDelay
+	verbose = false
+	dump = false
+
+	// Parse flags
+	cmd.SetArgs(args[1:])
+	err := cmd.ParseFlags(args[1:])
+	require.NoError(t, err)
+	
+	err = testFunc()
+	assert.NoError(t, err)
 }
 
 func TestMainFunc(t *testing.T) {
@@ -46,45 +71,42 @@ func TestMainFunc(t *testing.T) {
 
 	// Test with no arguments
 	testWithFlags(t, []string{"chiken"}, func() error {
-		return Main()
+		return output()
 	})
 
 	// Test with -v flag
 	testWithFlags(t, []string{"chiken", "-v"}, func() error {
-		return Main()
+		return output()
 	})
 
 	// Test with output
 	testWithFlags(t, []string{"chiken", "-n", "test"}, func() error {
 		defer os.Remove("img/test.png")
-		return Main()
+		return output()
 	})
 
 	// Test with re-output
-	testWithFlags(t, []string{"chiken", "-dump"}, func() error {
-		return Main()
+	testWithFlags(t, []string{"chiken", "--dump"}, func() error {
+		return reOutputs()
 	})
 
 	// Capture and restore stdout
 	w.Close()
-	_, err := ioutil.ReadAll(r)
-	if err != nil {
-		t.Fatal(err)
-	}
+	_, err := io.ReadAll(r)
+	require.NoError(t, err)
 }
 
 func TestMainFunction(t *testing.T) {
 	// Test with valid arguments
 	testWithFlags(t, []string{"chiken", "-m", "1", "-s", "basic", "-t", "white", "-e", "mirror", "-b", "#000000", "-f", "png", "-d", "10", "-n", "test"}, func() error {
 		defer os.Remove("img/test.png")
-		return Main()
+		return output()
 	})
 
 	// Test with invalid format
 	testWithFlags(t, []string{"chiken", "-f", "invalid"}, func() error {
-		if err := Main(); err == nil {
-			t.Error("Main() with invalid format should have failed")
-		}
+		err := output()
+		assert.Error(t, err, "output() with invalid format should have failed")
 		return nil
 	})
 }
@@ -104,18 +126,13 @@ func TestOutput(t *testing.T) {
 	w.Close()
 	var buf bytes.Buffer
 	_, err := buf.ReadFrom(r)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if buf.String() == "" {
-		t.Error("output() should have printed something")
-	}
+	require.NoError(t, err)
+	assert.NotEmpty(t, buf.String(), "output() should have printed something")
 
 	// Test with invalid background color
 	testWithFlags(t, []string{"chiken", "-b", "invalid"}, func() error {
-		if err := output(); err == nil {
-			t.Error("output() with invalid background should have failed")
-		}
+		err := output()
+		assert.Error(t, err, "output() with invalid background should have failed")
 		return nil
 	})
 }
@@ -125,18 +142,16 @@ func TestEncode(t *testing.T) {
 
 	// Test PNG encoding
 	testWithFlags(t, []string{"chiken", "-f", "png"}, func() error {
-		if err := encode(bgColor); err != nil {
-			t.Errorf("encode() for png failed: %v", err)
-		}
+		err := encode(bgColor)
+		assert.NoError(t, err, "encode() for png should not fail")
 		os.Remove("img/*.png")
 		return nil
 	})
 
 	// Test GIF encoding
 	testWithFlags(t, []string{"chiken", "-f", "gif"}, func() error {
-		if err := encode(bgColor); err != nil {
-			t.Errorf("encode() for gif failed: %v", err)
-		}
+		err := encode(bgColor)
+		assert.NoError(t, err, "encode() for gif should not fail")
 		os.Remove("img/*.gif")
 		return nil
 	})
@@ -154,23 +169,16 @@ func TestPrintReference(t *testing.T) {
 	w.Close()
 	var buf bytes.Buffer
 	_, err := buf.ReadFrom(r)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if buf.String() == "" {
-		t.Error("printReference() should have printed something")
-	}
+	require.NoError(t, err)
+	assert.NotEmpty(t, buf.String(), "printReference() should have printed something")
 }
 
 func TestPrintArgs(t *testing.T) {
 	testWithFlags(t, []string{"chiken", "-t", "black", "-s", "walk"}, func() error {
 		result := printArgs()
-		if result == "" {
-			t.Error("printArgs() should return non-empty string when flags are set")
-		}
-		if !strings.Contains(result, "-t=black") || !strings.Contains(result, "-s=walk") {
-			t.Errorf("printArgs() = %s, want to contain -t=black and -s=walk", result)
-		}
+		assert.NotEmpty(t, result, "printArgs() should return non-empty string when flags are set")
+		assert.Contains(t, result, "-t=black", "printArgs() should contain -t=black")
+		assert.Contains(t, result, "-s=walk", "printArgs() should contain -s=walk")
 		return nil
 	})
 
@@ -178,9 +186,7 @@ func TestPrintArgs(t *testing.T) {
 	testWithFlags(t, []string{"chiken"}, func() error {
 		result := printArgs()
 		// With default values, should return empty string
-		if result != "" {
-			t.Errorf("printArgs() with defaults = %s, want empty string", result)
-		}
+		assert.Empty(t, result, "printArgs() with defaults should return empty string")
 		return nil
 	})
 }
@@ -189,32 +195,27 @@ func TestFileName(t *testing.T) {
 	// Test with no output flag
 	testWithFlags(t, []string{"chiken"}, func() error {
 		filename := fileName()
-		if filename == "" {
-			t.Error("fileName() should not be empty")
-		}
+		assert.NotEmpty(t, filename, "fileName() should not be empty")
 		return nil
 	})
 
 	// Test with output flag
 	testWithFlags(t, []string{"chiken", "-n", "test"}, func() error {
 		filename := fileName()
-		if !strings.Contains(filename, "test") {
-			t.Errorf("fileName() = %s, want to contain test", filename)
-		}
+		assert.Contains(t, filename, "test", "fileName() should contain test")
 		return nil
 	})
 }
 
 func TestCheckFormat(t *testing.T) {
-	if err := checkFormat("png"); err != nil {
-		t.Errorf("checkFormat('png') failed: %v", err)
-	}
-	if err := checkFormat("gif"); err != nil {
-		t.Errorf("checkFormat('gif') failed: %v", err)
-	}
-	if err := checkFormat("invalid"); err == nil {
-		t.Error("checkFormat('invalid') should have failed")
-	}
+	err := checkFormat("png")
+	assert.NoError(t, err, "checkFormat('png') should not fail")
+	
+	err = checkFormat("gif")
+	assert.NoError(t, err, "checkFormat('gif') should not fail")
+	
+	err = checkFormat("invalid")
+	assert.Error(t, err, "checkFormat('invalid') should fail")
 }
 
 func TestReOutputs(t *testing.T) {
@@ -229,10 +230,6 @@ func TestReOutputs(t *testing.T) {
 	w.Close()
 	var buf bytes.Buffer
 	_, err := buf.ReadFrom(r)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if buf.String() == "" {
-		t.Error("reOutputs() should have printed something")
-	}
+	require.NoError(t, err)
+	assert.NotEmpty(t, buf.String(), "reOutputs() should have printed something")
 }
