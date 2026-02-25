@@ -2,7 +2,7 @@ package portrait
 
 import (
 	"image/color"
-	"os"
+	"io"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -38,12 +38,11 @@ func TestPortrait_Encode(t *testing.T) {
 		Effect:          "mirror",
 		BackgroundColor: &color.RGBA{R: 0, G: 0, B: 0, A: 255},
 		Format:          "png",
-		FileName:        "test.png",
+		Output:          io.Discard,
 	}
 	pPng := NewPortrait(optsPng)
 	err := pPng.Encode()
 	assert.NoError(t, err, "Portrait.Encode() for png should not fail")
-	os.Remove("test.png")
 
 	// Test GIF encoding
 	optsGif := Options{
@@ -55,12 +54,11 @@ func TestPortrait_Encode(t *testing.T) {
 		Effect:          "mirror",
 		BackgroundColor: &color.RGBA{R: 0, G: 0, B: 0, A: 255},
 		Format:          "gif",
-		FileName:        "test.gif",
+		Output:          io.Discard,
 	}
 	pGif := NewPortrait(optsGif)
 	err = pGif.Encode()
 	assert.NoError(t, err, "Portrait.Encode() for gif should not fail")
-	os.Remove("test.gif")
 }
 
 func TestVPrint(t *testing.T) {

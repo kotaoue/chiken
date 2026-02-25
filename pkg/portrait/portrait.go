@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"image/gif"
 	"image/png"
+	"io"
 	"os"
 	"strings"
 )
@@ -25,6 +26,7 @@ type Options struct {
 	Delay           int
 	FileName        string
 	Verbose         bool
+	Output          io.Writer
 }
 
 func NewPortrait(o Options) *Portrait {
@@ -48,12 +50,17 @@ func (p *Portrait) encodePng() error {
 		return err
 	}
 
-	f, err := os.Create(p.opt.FileName)
-	if err != nil {
-		return err
+	w := p.opt.Output
+	if w == nil {
+		f, err := os.Create(p.opt.FileName)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+		w = f
 	}
 
-	return png.Encode(f, img)
+	return png.Encode(w, img)
 }
 
 func (p *Portrait) encodeGif() error {
@@ -88,13 +95,17 @@ func (p *Portrait) encodeGif() error {
 		}
 	}
 
-	fp, err := os.OpenFile(p.opt.FileName, os.O_WRONLY|os.O_CREATE, 0644)
-	if err != nil {
-		return err
+	w := p.opt.Output
+	if w == nil {
+		fp, err := os.OpenFile(p.opt.FileName, os.O_WRONLY|os.O_CREATE, 0644)
+		if err != nil {
+			return err
+		}
+		defer fp.Close()
+		w = fp
 	}
-	defer fp.Close()
 
-	return gif.EncodeAll(fp, &gif.GIF{
+	return gif.EncodeAll(w, &gif.GIF{
 		Image:    images,
 		Delay:    delays,
 		Disposal: disposals,
