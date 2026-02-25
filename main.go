@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"image/color"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -38,6 +39,7 @@ var (
 	dump       bool
 	size       int
 	baseSize   = 32
+	out        io.Writer
 )
 
 var rootCmd = &cobra.Command{
@@ -108,6 +110,7 @@ func encode(c *color.RGBA) error {
 			Delay:           delay,
 			FileName:        fileName(),
 			Verbose:         verbose,
+			Output:          out,
 		},
 	)
 

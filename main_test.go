@@ -13,6 +13,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
+	out = io.Discard
 	os.Exit(m.Run())
 }
 
