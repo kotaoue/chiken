@@ -1,8 +1,10 @@
 # chiken
+
 The icon of kotaoue
 
 ## Usage
-```
+
+```shell
 # basic
 go run .
 
@@ -11,6 +13,7 @@ go run . -s=walk
 ```
 
 ## Args Example
+
 |args|theme|style|effect|size|background|image|
 |---|---|---|---|---|---|---|
 ||white|basic||32*32|transparent|![white](img/white.png)|
