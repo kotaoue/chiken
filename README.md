@@ -2,6 +2,7 @@
 
 [![Go](https://github.com/kotaoue/chiken/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/kotaoue/chiken/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/kotaoue/chiken/branch/main/graph/badge.svg)](https://codecov.io/gh/kotaoue/chiken)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kotaoue/chiken)](https://goreportcard.com/report/github.com/kotaoue/chiken)
 [![License](https://img.shields.io/github/license/kotaoue/chiken)](https://github.com/kotaoue/chiken/blob/main/LICENSE)
 
 The icon of kotaoue
