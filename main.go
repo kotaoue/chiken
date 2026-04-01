@@ -231,7 +231,15 @@ func reOutputs() error {
 	afterHyphenLine := false
 	for fs.Scan() {
 		if afterArgsLine && afterHyphenLine {
+			if !strings.HasPrefix(fs.Text(), "|") {
+				afterHyphenLine = false
+				continue
+			}
+
 			ss := strings.Split(fs.Text(), "|")
+			if len(ss) < 3 {
+				continue
+			}
 
 			theme = defaultTheme
 			style = defaultStyle
@@ -244,7 +252,7 @@ func reOutputs() error {
 			multiple = defaultMultiple
 			delay = defaultDelay
 
-			for _, v := range strings.Split(ss[1], " ") {
+			for _, v := range strings.Split(ss[2], " ") {
 				switch {
 				case strings.HasPrefix(v, "-s="):
 					style = strings.TrimPrefix(v, "-s=")
