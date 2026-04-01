@@ -3,11 +3,16 @@ package portrait
 import (
 	"image"
 	"image/color"
+	"image/draw"
 	"image/gif"
 	"image/png"
 	"io"
 	"os"
 	"strings"
+
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/basicfont"
+	"golang.org/x/image/math/fixed"
 )
 
 type Portrait struct {
@@ -27,6 +32,8 @@ type Options struct {
 	FileName        string
 	Verbose         bool
 	Output          io.Writer
+	Text            string
+	TextColor       *color.RGBA
 }
 
 func NewPortrait(o Options) *Portrait {
@@ -50,6 +57,11 @@ func (p *Portrait) encodePng() error {
 		return err
 	}
 
+	var finalImg image.Image = img
+	if p.opt.Text != "" {
+		finalImg = p.drawText(img)
+	}
+
 	w := p.opt.Output
 	if w == nil {
 		f, err := os.Create(p.opt.FileName)
@@ -60,7 +72,7 @@ func (p *Portrait) encodePng() error {
 		w = f
 	}
 
-	return png.Encode(w, img)
+	return png.Encode(w, finalImg)
 }
 
 func (p *Portrait) encodeGif() error {
@@ -171,6 +183,37 @@ func (p *Portrait) drawSubject(img *image.Paletted, subject [][]int, theme []col
 	}
 
 	return nil
+}
+
+func (p *Portrait) drawText(portrait *image.Paletted) image.Image {
+	face := basicfont.Face7x13
+
+	textColor := color.RGBA{R: 255, G: 255, B: 255, A: 255}
+	if p.opt.TextColor != nil && p.opt.TextColor.A != 0 {
+		textColor = *p.opt.TextColor
+	}
+
+	padding := p.opt.Size / 4
+	textWidth := font.MeasureString(face, p.opt.Text).Ceil()
+	canvasWidth := p.opt.Size + padding + textWidth + padding
+
+	canvas := image.NewNRGBA(image.Rect(0, 0, canvasWidth, p.opt.Size))
+
+	draw.Draw(canvas, canvas.Bounds(), image.NewUniform(p.opt.BackgroundColor), image.Point{}, draw.Src)
+	draw.Draw(canvas, portrait.Bounds(), portrait, image.Point{}, draw.Over)
+
+	metrics := face.Metrics()
+	textY := (p.opt.Size + metrics.Ascent.Ceil() - metrics.Descent.Ceil()) / 2
+
+	d := &font.Drawer{
+		Dst:  canvas,
+		Src:  image.NewUniform(textColor),
+		Face: face,
+		Dot:  fixed.P(p.opt.Size+padding, textY),
+	}
+	d.DrawString(p.opt.Text)
+
+	return canvas
 }
 
 func (p *Portrait) fetchStyle(s string) ([][]int, error) {
