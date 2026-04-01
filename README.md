@@ -80,8 +80,8 @@ go run . -s=walk
 
 ### With Text
 
-|image|args|theme|style|effect|size|background|
-|---|---|---|---|---|---|---|
-|![text_example](img/text_example.png)|-b=#1a1a1a -m=4 -n=text_example -T=chiken -c=#ff0080|white|basic||128*128|#1a1a1a|
-|![text_example_red](img/text_example_red.png)|-b=#1a1a1a -m=4 -n=text_example_red -T=chiken -c=#ff0000|white|basic||128*128|#1a1a1a|
-|![text_example_white](img/text_example_white.png)|-b=#000000 -m=4 -n=text_example_white -T=kotaoue|white|basic||128*128|#000000|
+|image|args|text (-T)|text-color (-c)|
+|---|---|---|---|
+|![text_example](img/text_example.png)|-b=#1a1a1a -m=4 -n=text_example -T=chiken -c=#ff0080|chiken|#ff0080|
+|![text_example_red](img/text_example_red.png)|-b=#1a1a1a -m=4 -n=text_example_red -T=chiken -c=#ff0000|chiken|#ff0000|
+|![text_example_white](img/text_example_white.png)|-b=#000000 -m=4 -n=text_example_white -T=kotaoue|kotaoue|(default: #ffffff)|
