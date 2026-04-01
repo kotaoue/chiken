@@ -77,3 +77,11 @@ go run . -s=walk
 |![white_ffffff](img/white_ffffff.png)|-b=#ffffff|white|basic||32*32|#ffffff|
 |![white_2](img/white_2.png)|-m=2|white|basic||64*64|transparent|
 |![white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64](img/white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64.gif)|-f=gif -s=basic-tiptoe-basic-tiptoe-basic-jump -d=64 -m=3|white|basic-tiptoe-basic-tiptoe-basic-jump||96*96|transparent|
+
+### With Text
+
+|image|args|theme|style|effect|size|background|
+|---|---|---|---|---|---|---|
+|![text_example](img/text_example.png)|-b=#1a1a1a -m=4 -n=text_example -T=chiken -c=#ff0080|white|basic||128*128|#1a1a1a|
+|![text_example_red](img/text_example_red.png)|-b=#1a1a1a -m=4 -n=text_example_red -T=chiken -c=#ff0000|white|basic||128*128|#1a1a1a|
+|![text_example_white](img/text_example_white.png)|-b=#000000 -m=4 -n=text_example_white -T=kotaoue|white|basic||128*128|#000000|
