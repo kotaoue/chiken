@@ -186,6 +186,9 @@ func printArgs() string {
 	if textColor != defaultTextColor {
 		args = append(args, fmt.Sprintf("-c=%s", textColor))
 	}
+	if textFontSize != defaultTextFontSize {
+		args = append(args, fmt.Sprintf("--text-font-size=%d", textFontSize))
+	}
 	return strings.Join(args, " ")
 }
 
@@ -275,6 +278,12 @@ func reOutputs() error {
 					text = strings.TrimPrefix(v, "-T=")
 				case strings.HasPrefix(v, "-c="):
 					textColor = strings.TrimPrefix(v, "-c=")
+				case strings.HasPrefix(v, "--text-font-size="):
+					i, err := strconv.Atoi(strings.TrimPrefix(v, "--text-font-size="))
+					if err != nil {
+						return err
+					}
+					textFontSize = i
 				case strings.HasPrefix(v, "-m="):
 					i, err := strconv.Atoi(strings.TrimPrefix(v, "-m="))
 					if err != nil {

@@ -80,8 +80,11 @@ go run . -s=walk
 
 ### With Text
 
-|image|args|text (-T)|text-color (-c)|
-|---|---|---|---|
-|![text_example](img/text_example.png)|-b=#1a1a1a -m=4 -n=text_example -T=chiken -c=#ff0080|chiken|#ff0080|
-|![text_example_red](img/text_example_red.png)|-b=#1a1a1a -m=4 -n=text_example_red -T=chiken -c=#ff0000|chiken|#ff0000|
-|![text_example_white](img/text_example_white.png)|-b=#000000 -m=4 -n=text_example_white -T=kotaoue|kotaoue|(default: #ffffff)|
+|image|args|text (-T)|text-color (-c)|font-size (--text-font-size)|
+|---|---|---|---|---|
+|![text_example](img/text_example.png)|-b=#1a1a1a -m=4 -n=text_example -T=chiken -c=#ff0080|chiken|#ff0080|(default)|
+|![text_example_red](img/text_example_red.png)|-b=#1a1a1a -m=4 -n=text_example_red -T=chiken -c=#ff0000|chiken|#ff0000|(default)|
+|![text_example_white](img/text_example_white.png)|-b=#000000 -m=4 -n=text_example_white -T=kotaoue|kotaoue|(default: #ffffff)|(default)|
+|![text_fs13](img/text_fs13.png)|-b=#1a1a1a -m=4 -n=text_fs13 -T=chiken -c=#ff0080 --text-font-size=13|chiken|#ff0080|13|
+|![text_fs20](img/text_fs20.png)|-b=#1a1a1a -m=4 -n=text_fs20 -T=chiken -c=#ff0080 --text-font-size=20|chiken|#ff0080|20|
+|![text_fs32](img/text_fs32.png)|-b=#1a1a1a -m=4 -n=text_fs32 -T=chiken -c=#ff0080 --text-font-size=32|chiken|#ff0080|32|
