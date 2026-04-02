@@ -59,6 +59,39 @@ func TestPortrait_Encode(t *testing.T) {
 	pGif := NewPortrait(optsGif)
 	err = pGif.Encode()
 	assert.NoError(t, err, "Portrait.Encode() for gif should not fail")
+
+	// Test PNG encoding with text
+	optsPngText := Options{
+		Size:            32,
+		BaseSize:        32,
+		Multiple:        1,
+		Style:           "basic",
+		Theme:           "white",
+		BackgroundColor: &color.RGBA{R: 26, G: 26, B: 26, A: 255},
+		Format:          "png",
+		Output:          io.Discard,
+		Text:            "Hello!",
+		TextColor:       &color.RGBA{R: 255, G: 0, B: 128, A: 255},
+	}
+	pPngText := NewPortrait(optsPngText)
+	err = pPngText.Encode()
+	assert.NoError(t, err, "Portrait.Encode() for png with text should not fail")
+
+	// Test PNG encoding with text using default text color (nil)
+	optsPngTextDefault := Options{
+		Size:            32,
+		BaseSize:        32,
+		Multiple:        1,
+		Style:           "basic",
+		Theme:           "white",
+		BackgroundColor: &color.RGBA{R: 0, G: 0, B: 0, A: 255},
+		Format:          "png",
+		Output:          io.Discard,
+		Text:            "Hi!",
+	}
+	pPngTextDefault := NewPortrait(optsPngTextDefault)
+	err = pPngTextDefault.Encode()
+	assert.NoError(t, err, "Portrait.Encode() for png with text (default color) should not fail")
 }
 
 func TestVPrint(t *testing.T) {

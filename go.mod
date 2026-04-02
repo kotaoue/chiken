@@ -5,6 +5,7 @@ go 1.24
 require (
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.11.1
+	golang.org/x/image v0.23.0
 )
 
 require (

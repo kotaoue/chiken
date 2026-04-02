@@ -37,6 +37,8 @@ func testWithFlags(t *testing.T, args []string, testFunc func() error) {
 	cmd.Flags().StringVarP(&effect, "effect", "e", defaultEffect, "set visual effects")
 	cmd.Flags().StringVarP(&background, "background", "b", defaultBackground, "background color. set with hex. example #ffffff. empty is transparent")
 	cmd.Flags().StringVarP(&name, "name", "n", defaultName, "name of output image")
+	cmd.Flags().StringVarP(&text, "text", "T", defaultText, "text to display alongside the image")
+	cmd.Flags().StringVarP(&textColor, "text-color", "c", defaultTextColor, "text color in hex format. example #ff0000")
 	cmd.Flags().IntVarP(&multiple, "multiple", "m", defaultMultiple, "value to be multiplied by 32")
 	cmd.Flags().IntVarP(&delay, "delay", "d", defaultDelay, "delay time for gif")
 	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "printing verbose output")
@@ -49,6 +51,8 @@ func testWithFlags(t *testing.T, args []string, testFunc func() error) {
 	effect = defaultEffect
 	background = defaultBackground
 	name = defaultName
+	text = defaultText
+	textColor = defaultTextColor
 	multiple = defaultMultiple
 	delay = defaultDelay
 	verbose = false
@@ -140,10 +144,11 @@ func TestOutput(t *testing.T) {
 
 func TestEncode(t *testing.T) {
 	bgColor := &color.RGBA{R: 0, G: 0, B: 0, A: 255}
+	tcColor := &color.RGBA{R: 255, G: 255, B: 255, A: 255}
 
 	// Test PNG encoding
 	testWithFlags(t, []string{"chiken", "-f", "png"}, func() error {
-		err := encode(bgColor)
+		err := encode(bgColor, tcColor)
 		assert.NoError(t, err, "encode() for png should not fail")
 		os.Remove("img/*.png")
 		return nil
@@ -151,9 +156,22 @@ func TestEncode(t *testing.T) {
 
 	// Test GIF encoding
 	testWithFlags(t, []string{"chiken", "-f", "gif"}, func() error {
-		err := encode(bgColor)
+		err := encode(bgColor, tcColor)
 		assert.NoError(t, err, "encode() for gif should not fail")
 		os.Remove("img/*.gif")
+		return nil
+	})
+}
+
+func TestEncodeWithText(t *testing.T) {
+	bgColor := &color.RGBA{R: 26, G: 26, B: 26, A: 255}
+	tcColor := &color.RGBA{R: 255, G: 0, B: 128, A: 255}
+
+	// Test PNG encoding with text
+	testWithFlags(t, []string{"chiken", "-f", "png", "-T", "Cock a doodle doo!", "-c", "#ff0080", "-b", "#1a1a1a", "-n", "test_text"}, func() error {
+		defer os.Remove("img/test_text.png")
+		err := encode(bgColor, tcColor)
+		assert.NoError(t, err, "encode() for png with text should not fail")
 		return nil
 	})
 }

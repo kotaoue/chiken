@@ -24,6 +24,8 @@ const (
 	defaultName       = ""
 	defaultMultiple   = 1
 	defaultDelay      = 0
+	defaultText       = ""
+	defaultTextColor  = "#ffffff"
 )
 
 var (
@@ -33,6 +35,8 @@ var (
 	effect     string
 	background string
 	name       string
+	text       string
+	textColor  string
 	multiple   int
 	delay      int
 	verbose    bool
@@ -61,6 +65,8 @@ func init() {
 	rootCmd.Flags().StringVarP(&effect, "effect", "e", defaultEffect, "set visual effects")
 	rootCmd.Flags().StringVarP(&background, "background", "b", defaultBackground, "background color. set with hex. example #ffffff. empty is transparent")
 	rootCmd.Flags().StringVarP(&name, "name", "n", defaultName, "name of output image")
+	rootCmd.Flags().StringVarP(&text, "text", "T", defaultText, "text to display alongside the image")
+	rootCmd.Flags().StringVarP(&textColor, "text-color", "c", defaultTextColor, "text color in hex format. example #ff0000")
 	rootCmd.Flags().IntVarP(&multiple, "multiple", "m", defaultMultiple, "value to be multiplied by 32")
 	rootCmd.Flags().IntVarP(&delay, "delay", "d", defaultDelay, "delay time for gif")
 	rootCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "printing verbose output")
@@ -87,7 +93,12 @@ func output() error {
 		return err
 	}
 
-	if err := encode(c); err != nil {
+	tc, err := cutil.HexToColor(textColor)
+	if err != nil {
+		return err
+	}
+
+	if err := encode(c, tc); err != nil {
 		return err
 	}
 
@@ -96,7 +107,7 @@ func output() error {
 	return nil
 }
 
-func encode(c *color.RGBA) error {
+func encode(c *color.RGBA, tc *color.RGBA) error {
 	p := portrait.NewPortrait(
 		portrait.Options{
 			Size:            size,
@@ -111,6 +122,8 @@ func encode(c *color.RGBA) error {
 			FileName:        fileName(),
 			Verbose:         verbose,
 			Output:          out,
+			Text:            text,
+			TextColor:       tc,
 		},
 	)
 
@@ -163,6 +176,12 @@ func printArgs() string {
 	if name != defaultName {
 		args = append(args, fmt.Sprintf("-n=%s", name))
 	}
+	if text != defaultText {
+		args = append(args, fmt.Sprintf("-T=%s", text))
+	}
+	if textColor != defaultTextColor {
+		args = append(args, fmt.Sprintf("-c=%s", textColor))
+	}
 	return strings.Join(args, " ")
 }
 
@@ -212,7 +231,15 @@ func reOutputs() error {
 	afterHyphenLine := false
 	for fs.Scan() {
 		if afterArgsLine && afterHyphenLine {
+			if !strings.HasPrefix(fs.Text(), "|") {
+				afterHyphenLine = false
+				continue
+			}
+
 			ss := strings.Split(fs.Text(), "|")
+			if len(ss) < 3 {
+				continue
+			}
 
 			theme = defaultTheme
 			style = defaultStyle
@@ -220,10 +247,12 @@ func reOutputs() error {
 			effect = defaultEffect
 			background = defaultBackground
 			name = defaultName
+			text = defaultText
+			textColor = defaultTextColor
 			multiple = defaultMultiple
 			delay = defaultDelay
 
-			for _, v := range strings.Split(ss[1], " ") {
+			for _, v := range strings.Split(ss[2], " ") {
 				switch {
 				case strings.HasPrefix(v, "-s="):
 					style = strings.TrimPrefix(v, "-s=")
@@ -237,6 +266,10 @@ func reOutputs() error {
 					background = strings.TrimPrefix(v, "-b=")
 				case strings.HasPrefix(v, "-n="):
 					name = strings.TrimPrefix(v, "-n=")
+				case strings.HasPrefix(v, "-T="):
+					text = strings.TrimPrefix(v, "-T=")
+				case strings.HasPrefix(v, "-c="):
+					textColor = strings.TrimPrefix(v, "-c=")
 				case strings.HasPrefix(v, "-m="):
 					i, err := strconv.Atoi(strings.TrimPrefix(v, "-m="))
 					if err != nil {
