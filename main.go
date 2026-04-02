@@ -27,6 +27,7 @@ const (
 	defaultText         = ""
 	defaultTextColor    = "#ffffff"
 	defaultTextFontSize = 0
+	defaultTextFont     = "regular"
 )
 
 var (
@@ -39,6 +40,7 @@ var (
 	text         string
 	textColor    string
 	textFontSize int
+	textFont     string
 	multiple     int
 	delay        int
 	verbose      bool
@@ -70,6 +72,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&text, "text", "T", defaultText, "text to display alongside the image")
 	rootCmd.Flags().StringVarP(&textColor, "text-color", "c", defaultTextColor, "text color in hex format. example #ff0000")
 	rootCmd.Flags().IntVar(&textFontSize, "text-font-size", defaultTextFontSize, "font size for text rendering. 0 uses the default 7x13 bitmap font")
+	rootCmd.Flags().StringVar(&textFont, "text-font", defaultTextFont, fmt.Sprintf("font for text rendering. available: %s", strings.Join(portrait.ListFonts(), ", ")))
 	rootCmd.Flags().IntVarP(&multiple, "multiple", "m", defaultMultiple, "value to be multiplied by 32")
 	rootCmd.Flags().IntVarP(&delay, "delay", "d", defaultDelay, "delay time for gif")
 	rootCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "printing verbose output")
@@ -128,6 +131,7 @@ func encode(c *color.RGBA, tc *color.RGBA) error {
 			Text:            text,
 			TextColor:       tc,
 			TextFontSize:    textFontSize,
+			TextFont:        textFont,
 		},
 	)
 
@@ -188,6 +192,9 @@ func printArgs() string {
 	}
 	if textFontSize != defaultTextFontSize {
 		args = append(args, fmt.Sprintf("--text-font-size=%d", textFontSize))
+	}
+	if textFont != defaultTextFont {
+		args = append(args, fmt.Sprintf("--text-font=%s", textFont))
 	}
 	return strings.Join(args, " ")
 }
@@ -257,6 +264,7 @@ func reOutputs() error {
 			text = defaultText
 			textColor = defaultTextColor
 			textFontSize = defaultTextFontSize
+			textFont = defaultTextFont
 			multiple = defaultMultiple
 			delay = defaultDelay
 
@@ -284,6 +292,8 @@ func reOutputs() error {
 						return err
 					}
 					textFontSize = i
+				case strings.HasPrefix(v, "--text-font="):
+					textFont = strings.TrimPrefix(v, "--text-font=")
 				case strings.HasPrefix(v, "-m="):
 					i, err := strconv.Atoi(strings.TrimPrefix(v, "-m="))
 					if err != nil {

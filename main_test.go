@@ -7,6 +7,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/kotaoue/chiken/pkg/portrait"
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -40,6 +41,7 @@ func testWithFlags(t *testing.T, args []string, testFunc func() error) {
 	cmd.Flags().StringVarP(&text, "text", "T", defaultText, "text to display alongside the image")
 	cmd.Flags().StringVarP(&textColor, "text-color", "c", defaultTextColor, "text color in hex format. example #ff0000")
 	cmd.Flags().IntVar(&textFontSize, "text-font-size", defaultTextFontSize, "font size for text rendering. 0 uses the default 7x13 bitmap font")
+	cmd.Flags().StringVar(&textFont, "text-font", defaultTextFont, "font for text rendering")
 	cmd.Flags().IntVarP(&multiple, "multiple", "m", defaultMultiple, "value to be multiplied by 32")
 	cmd.Flags().IntVarP(&delay, "delay", "d", defaultDelay, "delay time for gif")
 	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "printing verbose output")
@@ -55,6 +57,7 @@ func testWithFlags(t *testing.T, args []string, testFunc func() error) {
 	text = defaultText
 	textColor = defaultTextColor
 	textFontSize = defaultTextFontSize
+	textFont = defaultTextFont
 	multiple = defaultMultiple
 	delay = defaultDelay
 	verbose = false
@@ -189,6 +192,23 @@ func TestEncodeWithTextFontSize(t *testing.T) {
 		assert.NoError(t, err, "encode() for png with text and font size should not fail")
 		return nil
 	})
+}
+
+func TestEncodeWithTextFont(t *testing.T) {
+	bgColor := &color.RGBA{R: 26, G: 26, B: 26, A: 255}
+	tcColor := &color.RGBA{R: 255, G: 255, B: 255, A: 255}
+
+	for _, f := range portrait.ListFonts() {
+		f := f
+		t.Run(f, func(t *testing.T) {
+			testWithFlags(t, []string{"chiken", "-f", "png", "-T", "Hello!", "-b", "#1a1a1a", "-m", "2", "--text-font-size", "24", "--text-font", f, "-n", "test_text_font_" + f}, func() error {
+				defer os.Remove("img/test_text_font_" + f + ".png")
+				err := encode(bgColor, tcColor)
+				assert.NoError(t, err, "encode() for png with text-font=%s should not fail", f)
+				return nil
+			})
+		})
+	}
 }
 
 func TestPrintReference(t *testing.T) {
