@@ -252,7 +252,7 @@ func reOutputs() error {
 			multiple = defaultMultiple
 			delay = defaultDelay
 
-			for _, v := range strings.Split(ss[1], " ") {
+			for _, v := range strings.Split(ss[2], " ") {
 				switch {
 				case strings.HasPrefix(v, "-s="):
 					style = strings.TrimPrefix(v, "-s=")
