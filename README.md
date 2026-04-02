@@ -7,53 +7,53 @@
 
 The icon of kotaoue
 
-## Usage
-
-```shell
-# basic
-go run .
-
-# walk style
-go run . -s=walk
-```
-
-## Args Example
-
-|image|args|theme|style|effect|size|background|
-|---|---|---|---|---|---|---|
-|![white](img/white.png)||white|basic||32*32|transparent|
-|![white_walk](img/white_walk.png)|-s=walk|white|walk||32*32|transparent|
-|![white_wide](img/white_wide.png)|-s=wide|white|wide||32*32|transparent|
-|![white_tiptoe](img/white_tiptoe.png)|-s=tiptoe|white|tiptoe||32*32|transparent|
-|![white_jump](img/white_jump.png)|-s=jump|white|jump||32*32|transparent|
-|![white_sleep](img/white_sleep.png)|-s=sleep|white|sleep||32*32|transparent|
-|![white_deepSleep](img/white_deepSleep.png)|-s=deepSleep|white|deepSleep||32*32|transparent|
-|![white_wake](img/white_wake.png)|-s=wake|white|wake||32*32|transparent|
-|![white_basic-walk](img/white_basic-walk.gif)|-f=gif -s=basic-walk|white|basic-walk||32*32|transparent|
-|![white_basic-walk_delay16](img/white_basic-walk_delay16.gif)|-f=gif -s=basic-walk -d=16|white|basic-walk||32*32|transparent|
-|![white_basic-tiptoe_delay16](img/white_basic-tiptoe_delay16.gif)|-f=gif -s=basic-tiptoe -d=16|white|basic-tiptoe||32*32|transparent|
-|![white_basic-jump_delay16](img/white_basic-jump_delay16.gif)|-f=gif -s=basic-jump -d=16|white|basic-jump||32*32|transparent|
-|![panda](img/panda.png)|-t=panda|panda|basic||32*32|transparent|
-|![brown](img/brown.png)|-t=brown|brown|basic||32*32|transparent|
-|![brownBlack](img/brownBlack.png)|-t=brownBlack|brownBlack|basic||32*32|transparent|
-|![black](img/black.png)|-t=black|black|basic||32*32|transparent|
-|![yellow](img/yellow.png)|-t=yellow|yellow|basic||32*32|transparent|
-|![green](img/green.png)|-t=green|green|basic||32*32|transparent|
-|![mossGreen](img/mossGreen.png)|-t=mossGreen|mossGreen|basic||32*32|transparent|
-|![lightBlue](img/lightBlue.png)|-t=lightBlue|lightBlue|basic||32*32|transparent|
-|![blue](img/blue.png)|-t=blue|blue|basic||32*32|transparent|
-|![bluePurple](img/bluePurple.png)|-t=bluePurple|bluePurple|basic||32*32|transparent|
-|![purple](img/purple.png)|-t=purple|purple|basic||32*32|transparent|
-|![pinkPurple](img/pinkPurple.png)|-t=pinkPurple|pinkPurple|basic||32*32|transparent|
-|![pink](img/pink.png)|-t=pink|pink|basic||32*32|transparent|
-|![red](img/red.png)|-t=red|red|basic||32*32|transparent|
-|![orange](img/orange.png)|-t=orange|orange|basic||32*32|transparent|
-|![gray](img/gray.png)|-t=gray|gray|basic||32*32|transparent|
-|![player2](img/player2.png)|-t=player2|player2|basic||32*32|transparent|
-|![player3](img/player3.png)|-t=player3|player3|basic||32*32|transparent|
-|![player4](img/player4.png)|-t=player4|player4|basic||32*32|transparent|
-|![player5](img/player5.png)|-t=player5|player5|basic||32*32|transparent|
-|![vivid](img/vivid.png)|-t=vivid|vivid|basic||32*32|transparent|
+|image|args|theme|style|
+|---|---|---|---|
+|![white](img/white.png)||white|basic|
+|![white_walk](img/white_walk.png)|-s=walk|white|walk|
+|![white_wide](img/white_wide.png)|-s=wide|white|wide|
+|![white_tiptoe](img/white_tiptoe.png)|-s=tiptoe|white|tiptoe|
+|![white_jump](img/white_jump.png)|-s=jump|white|jump|
+|![white_sleep](img/white_sleep.png)|-s=sleep|white|sleep|
+|![white_deepSleep](img/white_deepSleep.png)|-s=deepSleep|white|deepSleep|
+|![white_wake](img/white_wake.png)|-s=wake|white|wake|
+|![white_basic-walk](img/white_basic-walk.gif)|-f=gif -s=basic-walk|white|basic-walk|
+|![white_basic-walk_delay16](img/white_basic-walk_delay16.gif)|-f=gif -s=basic-walk -d=16|white|basic-walk|
+|![white_basic-tiptoe_delay16](img/white_basic-tiptoe_delay16.gif)|-f=gif -s=basic-tiptoe|white|basic-tiptoe|
+|![white_basic-jump_delay16](img/white_basic-jump_delay16.gif)|-f=gif -s=basic-jump|white|basic-jump|
+|![panda](img/panda.png)|-t=panda|panda|basic|
+|![brown](img/brown.png)|-t=brown|brown|basic|
+|![brownBlack](img/brownBlack.png)|-t=brownBlack|brownBlack|basic|
+|![black](img/black.png)|-t=black|black|basic|
+|![yellow](img/yellow.png)|-t=yellow|yellow|basic|
+|![green](img/green.png)|-t=green|green|basic|
+|![mossGreen](img/mossGreen.png)|-t=mossGreen|mossGreen|basic|
+|![lightBlue](img/lightBlue.png)|-t=lightBlue|lightBlue|basic|
+|![blue](img/blue.png)|-t=blue|blue|basic|
+|![bluePurple](img/bluePurple.png)|-t=bluePurple|bluePurple|basic|
+|![purple](img/purple.png)|-t=purple|purple|basic|
+|![pinkPurple](img/pinkPurple.png)|-t=pinkPurple|pinkPurple|basic|
+|![pink](img/pink.png)|-t=pink|pink|basic|
+|![red](img/red.png)|-t=red|red|basic|
+|![orange](img/orange.png)|-t=orange|orange|basic|
+|![gray](img/gray.png)|-t=gray|gray|basic|
+|![player2](img/player2.png)|-t=player2|player2|basic|
+|![player3](img/player3.png)|-t=player3|player3|basic|
+|![player4](img/player4.png)|-t=player4|player4|basic|
+|![player5](img/player5.png)|-t=player5|player5|basic|
+|![vivid](img/vivid.png)|-t=vivid|vivid|basic|
+|![random](img/random.png)|-t=random|random|basic|
+|![random1](img/random1.png)|-t=random -n=random1|random|basic|
+|![random2](img/random2.png)|-t=random -n=random2|random|basic|
+|![white-player2-player3-player4](img/white-player2-player3-player4.gif)|-f=gif -t=white-player2-player3-player4|white-player2-player3-player4|basic|
+|![party1](img/party1.png)|-t=party1|party1|basic|
+|![party8](img/party8.gif)|-f=gif -t=party8|party8|basic|
+|![party16](img/party16.gif)|-f=gif -t=party16|party16|basic|
+|![party32](img/party32.gif)|-f=gif -t=party32|party32|basic|
+|![party32_basic-tiptoe](img/party32_basic-tiptoe.gif)|-f=gif -t=party32 -s=basic-tiptoe|party32|basic-tiptoe|
+|![white_ffffff](img/white_ffffff.png)|-b=#ffffff|white|basic|
+|![white_2](img/white_2.png)|-m=2|white|basic|
+|![white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64](img/white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64.gif)|-f=gif -s=basic-tiptoe-basic-tiptoe-basic-jump -d=64 -m=3|white|basic-tiptoe-basic-tiptoe-basic-jump|
 |![random](img/random.png)|-t=random|random|basic||32*32|transparent|
 |![random1](img/random1.png)|-t=random -n=random1|random|basic||32*32|transparent|
 |![random2](img/random2.png)|-t=random -n=random2|random|basic||32*32|transparent|
