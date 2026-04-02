@@ -16,34 +16,36 @@ import (
 )
 
 const (
-	defaultTheme      = portrait.WhiteTheme
-	defaultStyle      = portrait.BasicStyle
-	defaultFormat     = "png"
-	defaultEffect     = ""
-	defaultBackground = "transparent"
-	defaultName       = ""
-	defaultMultiple   = 1
-	defaultDelay      = 0
-	defaultText       = ""
-	defaultTextColor  = "#ffffff"
+	defaultTheme        = portrait.WhiteTheme
+	defaultStyle        = portrait.BasicStyle
+	defaultFormat       = "png"
+	defaultEffect       = ""
+	defaultBackground   = "transparent"
+	defaultName         = ""
+	defaultMultiple     = 1
+	defaultDelay        = 0
+	defaultText         = ""
+	defaultTextColor    = "#ffffff"
+	defaultTextFontSize = 0
 )
 
 var (
-	theme      string
-	style      string
-	format     string
-	effect     string
-	background string
-	name       string
-	text       string
-	textColor  string
-	multiple   int
-	delay      int
-	verbose    bool
-	dump       bool
-	size       int
-	baseSize   = 32
-	out        io.Writer
+	theme        string
+	style        string
+	format       string
+	effect       string
+	background   string
+	name         string
+	text         string
+	textColor    string
+	textFontSize int
+	multiple     int
+	delay        int
+	verbose      bool
+	dump         bool
+	size         int
+	baseSize     = 32
+	out          io.Writer
 )
 
 var rootCmd = &cobra.Command{
@@ -67,6 +69,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&name, "name", "n", defaultName, "name of output image")
 	rootCmd.Flags().StringVarP(&text, "text", "T", defaultText, "text to display alongside the image")
 	rootCmd.Flags().StringVarP(&textColor, "text-color", "c", defaultTextColor, "text color in hex format. example #ff0000")
+	rootCmd.Flags().IntVar(&textFontSize, "text-font-size", defaultTextFontSize, "font size for text rendering. 0 uses the default 7x13 bitmap font")
 	rootCmd.Flags().IntVarP(&multiple, "multiple", "m", defaultMultiple, "value to be multiplied by 32")
 	rootCmd.Flags().IntVarP(&delay, "delay", "d", defaultDelay, "delay time for gif")
 	rootCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "printing verbose output")
@@ -124,6 +127,7 @@ func encode(c *color.RGBA, tc *color.RGBA) error {
 			Output:          out,
 			Text:            text,
 			TextColor:       tc,
+			TextFontSize:    textFontSize,
 		},
 	)
 
@@ -181,6 +185,9 @@ func printArgs() string {
 	}
 	if textColor != defaultTextColor {
 		args = append(args, fmt.Sprintf("-c=%s", textColor))
+	}
+	if textFontSize != defaultTextFontSize {
+		args = append(args, fmt.Sprintf("--text-font-size=%d", textFontSize))
 	}
 	return strings.Join(args, " ")
 }
@@ -249,6 +256,7 @@ func reOutputs() error {
 			name = defaultName
 			text = defaultText
 			textColor = defaultTextColor
+			textFontSize = defaultTextFontSize
 			multiple = defaultMultiple
 			delay = defaultDelay
 
@@ -270,6 +278,12 @@ func reOutputs() error {
 					text = strings.TrimPrefix(v, "-T=")
 				case strings.HasPrefix(v, "-c="):
 					textColor = strings.TrimPrefix(v, "-c=")
+				case strings.HasPrefix(v, "--text-font-size="):
+					i, err := strconv.Atoi(strings.TrimPrefix(v, "--text-font-size="))
+					if err != nil {
+						return err
+					}
+					textFontSize = i
 				case strings.HasPrefix(v, "-m="):
 					i, err := strconv.Atoi(strings.TrimPrefix(v, "-m="))
 					if err != nil {

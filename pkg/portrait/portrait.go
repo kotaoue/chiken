@@ -12,6 +12,8 @@ import (
 
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
+	"golang.org/x/image/font/gofont/goregular"
+	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/math/fixed"
 )
 
@@ -34,6 +36,7 @@ type Options struct {
 	Output          io.Writer
 	Text            string
 	TextColor       *color.RGBA
+	TextFontSize    int
 }
 
 func NewPortrait(o Options) *Portrait {
@@ -185,8 +188,31 @@ func (p *Portrait) drawSubject(img *image.Paletted, subject [][]int, theme []col
 	return nil
 }
 
+func (p *Portrait) newFontFace() font.Face {
+	if p.opt.TextFontSize > 0 {
+		tt, err := opentype.Parse(goregular.TTF)
+		if err != nil {
+			vPrintf("failed to parse font: %v\n", err)
+			return basicfont.Face7x13
+		}
+		f, err := opentype.NewFace(tt, &opentype.FaceOptions{
+			Size: float64(p.opt.TextFontSize),
+			DPI:  72,
+		})
+		if err != nil {
+			vPrintf("failed to create font face: %v\n", err)
+			return basicfont.Face7x13
+		}
+		return f
+	}
+	return basicfont.Face7x13
+}
+
 func (p *Portrait) drawText(portrait *image.Paletted) image.Image {
-	face := basicfont.Face7x13
+	face := p.newFontFace()
+	if closer, ok := face.(io.Closer); ok {
+		defer closer.Close()
+	}
 
 	textColor := color.RGBA{R: 255, G: 255, B: 255, A: 255}
 	if p.opt.TextColor != nil && p.opt.TextColor.A != 0 {
