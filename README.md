@@ -57,6 +57,20 @@ go run . -s=walk
 |![random](img/random.png)|-t=random|random|basic||32*32|transparent|
 |![random1](img/random1.png)|-t=random -n=random1|random|basic||32*32|transparent|
 |![random2](img/random2.png)|-t=random -n=random2|random|basic||32*32|transparent|
+|![white-player2-player3-player4](img/white-player2-player3-player4.gif)|-f=gif -t=white-player2-player3-player4|white-player2-player3-player4|basic||32*32|transparent|
+|![party1](img/party1.png)|-t=party1|party1|basic||32*32|transparent|
+|![party8](img/party8.gif)|-f=gif -t=party8|party8|basic||32*32|transparent|
+|![party16](img/party16.gif)|-f=gif -t=party16|party16|basic||32*32|transparent|
+|![party32](img/party32.gif)|-f=gif -t=party32|party32|basic||32*32|transparent|
+|![party32_basic-tiptoe](img/party32_basic-tiptoe.gif)|-f=gif -t=party32 -s=basic-tiptoe|party32|basic-tiptoe||32*32|transparent|
+|![white_ffffff](img/white_ffffff.png)|-b=#ffffff|white|basic||32*32|#ffffff|
+|![white_2](img/white_2.png)|-m=2|white|basic||64*64|transparent|
+|![white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64](img/white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64.gif)|-f=gif -s=basic-tiptoe-basic-tiptoe-basic-jump -d=64 -m=3|white|basic-tiptoe-basic-tiptoe-basic-jump||96*96|transparent|
+
+## With Effect
+
+|image|args|theme|style|effect|size|background|
+|---|---|---|---|---|---|---|
 |![white_negative](img/white_negative.png)|-e=negative|white|basic|negative|32*32|transparent|
 |![white_grayscale](img/white_grayscale.png)|-e=grayscale|white|basic|grayscale|32*32|transparent|
 |![white_negative-grayscale](img/white_negative-grayscale.png)|-e=negative-grayscale|white|basic|negative-grayscale|32*32|transparent|
@@ -68,15 +82,6 @@ go run . -s=walk
 |![white_upLoop1](img/white_upLoop1.gif)|-f=gif -e=upLoop1|white|basic|upLoop1|32*32|transparent|
 |![white_downLoop1](img/white_downLoop1.gif)|-f=gif -e=downLoop1|white|basic|downLoop1|32*32|transparent|
 |![white_mirror](img/white_mirror.png)|-e=mirror|white|basic|mirror|32*32|transparent|
-|![white-player2-player3-player4](img/white-player2-player3-player4.gif)|-f=gif -t=white-player2-player3-player4|white-player2-player3-player4|basic||32*32|transparent|
-|![party1](img/party1.png)|-t=party1|party1|basic||32*32|transparent|
-|![party8](img/party8.gif)|-f=gif -t=party8|party8|basic||32*32|transparent|
-|![party16](img/party16.gif)|-f=gif -t=party16|party16|basic||32*32|transparent|
-|![party32](img/party32.gif)|-f=gif -t=party32|party32|basic||32*32|transparent|
-|![party32_basic-tiptoe](img/party32_basic-tiptoe.gif)|-f=gif -t=party32 -s=basic-tiptoe|party32|basic-tiptoe||32*32|transparent|
-|![white_ffffff](img/white_ffffff.png)|-b=#ffffff|white|basic||32*32|#ffffff|
-|![white_2](img/white_2.png)|-m=2|white|basic||64*64|transparent|
-|![white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64](img/white_basic-tiptoe-basic-tiptoe-basic-jump_3_delay64.gif)|-f=gif -s=basic-tiptoe-basic-tiptoe-basic-jump -d=64 -m=3|white|basic-tiptoe-basic-tiptoe-basic-jump||96*96|transparent|
 
 ### With Text
 
