@@ -92,6 +92,24 @@ func TestPortrait_Encode(t *testing.T) {
 	pPngTextDefault := NewPortrait(optsPngTextDefault)
 	err = pPngTextDefault.Encode()
 	assert.NoError(t, err, "Portrait.Encode() for png with text (default color) should not fail")
+
+	// Test PNG encoding with text and custom font size
+	optsPngTextFontSize := Options{
+		Size:            64,
+		BaseSize:        32,
+		Multiple:        2,
+		Style:           "basic",
+		Theme:           "white",
+		BackgroundColor: &color.RGBA{R: 26, G: 26, B: 26, A: 255},
+		Format:          "png",
+		Output:          io.Discard,
+		Text:            "Hello!",
+		TextColor:       &color.RGBA{R: 255, G: 255, B: 255, A: 255},
+		TextFontSize:    24,
+	}
+	pPngTextFontSize := NewPortrait(optsPngTextFontSize)
+	err = pPngTextFontSize.Encode()
+	assert.NoError(t, err, "Portrait.Encode() for png with text and custom font size should not fail")
 }
 
 func TestVPrint(t *testing.T) {

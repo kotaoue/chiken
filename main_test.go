@@ -39,6 +39,7 @@ func testWithFlags(t *testing.T, args []string, testFunc func() error) {
 	cmd.Flags().StringVarP(&name, "name", "n", defaultName, "name of output image")
 	cmd.Flags().StringVarP(&text, "text", "T", defaultText, "text to display alongside the image")
 	cmd.Flags().StringVarP(&textColor, "text-color", "c", defaultTextColor, "text color in hex format. example #ff0000")
+	cmd.Flags().IntVar(&textFontSize, "text-font-size", defaultTextFontSize, "font size for text rendering. 0 uses the default 7x13 bitmap font")
 	cmd.Flags().IntVarP(&multiple, "multiple", "m", defaultMultiple, "value to be multiplied by 32")
 	cmd.Flags().IntVarP(&delay, "delay", "d", defaultDelay, "delay time for gif")
 	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "printing verbose output")
@@ -53,6 +54,7 @@ func testWithFlags(t *testing.T, args []string, testFunc func() error) {
 	name = defaultName
 	text = defaultText
 	textColor = defaultTextColor
+	textFontSize = defaultTextFontSize
 	multiple = defaultMultiple
 	delay = defaultDelay
 	verbose = false
@@ -172,6 +174,19 @@ func TestEncodeWithText(t *testing.T) {
 		defer os.Remove("img/test_text.png")
 		err := encode(bgColor, tcColor)
 		assert.NoError(t, err, "encode() for png with text should not fail")
+		return nil
+	})
+}
+
+func TestEncodeWithTextFontSize(t *testing.T) {
+	bgColor := &color.RGBA{R: 26, G: 26, B: 26, A: 255}
+	tcColor := &color.RGBA{R: 255, G: 255, B: 255, A: 255}
+
+	// Test PNG encoding with text and custom font size
+	testWithFlags(t, []string{"chiken", "-f", "png", "-T", "Hello!", "-b", "#1a1a1a", "-m", "2", "--text-font-size", "24", "-n", "test_text_fontsize"}, func() error {
+		defer os.Remove("img/test_text_fontsize.png")
+		err := encode(bgColor, tcColor)
+		assert.NoError(t, err, "encode() for png with text and font size should not fail")
 		return nil
 	})
 }
