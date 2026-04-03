@@ -12,7 +12,18 @@ import (
 
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
+	"golang.org/x/image/font/gofont/gobold"
+	"golang.org/x/image/font/gofont/gobolditalic"
+	"golang.org/x/image/font/gofont/goitalic"
+	"golang.org/x/image/font/gofont/gomedium"
+	"golang.org/x/image/font/gofont/gomediumitalic"
+	"golang.org/x/image/font/gofont/gomono"
+	"golang.org/x/image/font/gofont/gomonobold"
+	"golang.org/x/image/font/gofont/gomonobolditalic"
+	"golang.org/x/image/font/gofont/gomonoitalic"
 	"golang.org/x/image/font/gofont/goregular"
+	"golang.org/x/image/font/gofont/gosmallcaps"
+	"golang.org/x/image/font/gofont/gosmallcapsitalic"
 	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/math/fixed"
 )
@@ -37,6 +48,7 @@ type Options struct {
 	Text            string
 	TextColor       *color.RGBA
 	TextFontSize    int
+	TextFont        string
 }
 
 func NewPortrait(o Options) *Portrait {
@@ -188,9 +200,58 @@ func (p *Portrait) drawSubject(img *image.Paletted, subject [][]int, theme []col
 	return nil
 }
 
+// ListFonts returns the available font names for text rendering.
+func ListFonts() []string {
+	return []string{
+		"regular",
+		"bold",
+		"italic",
+		"bold-italic",
+		"mono",
+		"mono-bold",
+		"mono-italic",
+		"mono-bold-italic",
+		"small-caps",
+		"small-caps-italic",
+		"medium",
+		"medium-italic",
+	}
+}
+
+// fontTTF returns the TTF bytes for the named font.
+// If the name is unrecognized, it returns goregular.TTF.
+func fontTTF(name string) []byte {
+	switch strings.ToLower(name) {
+	case "bold":
+		return gobold.TTF
+	case "italic":
+		return goitalic.TTF
+	case "bold-italic":
+		return gobolditalic.TTF
+	case "mono":
+		return gomono.TTF
+	case "mono-bold":
+		return gomonobold.TTF
+	case "mono-italic":
+		return gomonoitalic.TTF
+	case "mono-bold-italic":
+		return gomonobolditalic.TTF
+	case "small-caps":
+		return gosmallcaps.TTF
+	case "small-caps-italic":
+		return gosmallcapsitalic.TTF
+	case "medium":
+		return gomedium.TTF
+	case "medium-italic":
+		return gomediumitalic.TTF
+	default:
+		return goregular.TTF
+	}
+}
+
 func (p *Portrait) newFontFace() font.Face {
 	if p.opt.TextFontSize > 0 {
-		tt, err := opentype.Parse(goregular.TTF)
+		tt, err := opentype.Parse(fontTTF(p.opt.TextFont))
 		if err != nil {
 			vPrintf("failed to parse font: %v\n", err)
 			return basicfont.Face7x13

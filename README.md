@@ -75,11 +75,15 @@ The icon of kotaoue
 
 ### With Text
 
-|image|args|text (-T)|text-color (-c)|font-size (--text-font-size)|
-|---|---|---|---|---|
-|![text_example](img/text_example.png)|-b=#1a1a1a -m=4 -n=text_example -T=chiken -c=#ff0080|chiken|#ff0080|(default)|
-|![text_example_red](img/text_example_red.png)|-b=#1a1a1a -m=4 -n=text_example_red -T=chiken -c=#ff0000|chiken|#ff0000|(default)|
-|![text_example_white](img/text_example_white.png)|-b=#000000 -m=4 -n=text_example_white -T=kotaoue|kotaoue|(default: #ffffff)|(default)|
-|![text_fs13](img/text_fs13.png)|-b=#1a1a1a -m=4 -n=text_fs13 -T=chiken -c=#ff0080 --text-font-size=13|chiken|#ff0080|13|
-|![text_fs20](img/text_fs20.png)|-b=#1a1a1a -m=4 -n=text_fs20 -T=chiken -c=#ff0080 --text-font-size=20|chiken|#ff0080|20|
-|![text_fs32](img/text_fs32.png)|-b=#1a1a1a -m=4 -n=text_fs32 -T=chiken -c=#ff0080 --text-font-size=32|chiken|#ff0080|32|
+|image|args|text (-T)|text-color (-c)|font-size (--text-font-size)|font (--text-font)|
+|---|---|---|---|---|---|
+|![text_example](img/text_example.png)|-b=#1a1a1a -m=4 -n=text_example -T=chiken -c=#ff0080|chiken|#ff0080|(default)|(default)|
+|![text_example_red](img/text_example_red.png)|-b=#1a1a1a -m=4 -n=text_example_red -T=chiken -c=#ff0000|chiken|#ff0000|(default)|(default)|
+|![text_example_white](img/text_example_white.png)|-b=#000000 -m=4 -n=text_example_white -T=kotaoue|kotaoue|(default: #ffffff)|(default)|(default)|
+|![text_fs13](img/text_fs13.png)|-b=#1a1a1a -m=4 -n=text_fs13 -T=chiken -c=#ff0080 --text-font-size=13|chiken|#ff0080|13|(default)|
+|![text_fs20](img/text_fs20.png)|-b=#1a1a1a -m=4 -n=text_fs20 -T=chiken -c=#ff0080 --text-font-size=20|chiken|#ff0080|20|(default)|
+|![text_fs32](img/text_fs32.png)|-b=#1a1a1a -m=4 -n=text_fs32 -T=chiken -c=#ff0080 --text-font-size=32|chiken|#ff0080|32|(default)|
+|![text_font_bold](img/text_font_bold.png)|-b=#1a1a1a -m=4 -n=text_font_bold -T=chiken -c=#ff0080 --text-font-size=20 --text-font=bold|chiken|#ff0080|20|bold|
+|![text_font_italic](img/text_font_italic.png)|-b=#1a1a1a -m=4 -n=text_font_italic -T=chiken -c=#ff0080 --text-font-size=20 --text-font=italic|chiken|#ff0080|20|italic|
+|![text_font_mono](img/text_font_mono.png)|-b=#1a1a1a -m=4 -n=text_font_mono -T=chiken -c=#ff0080 --text-font-size=20 --text-font=mono|chiken|#ff0080|20|mono|
+|![text_font_small-caps](img/text_font_small-caps.png)|-b=#1a1a1a -m=4 -n=text_font_small-caps -T=chiken -c=#ff0080 --text-font-size=20 --text-font=small-caps|chiken|#ff0080|20|small-caps|
