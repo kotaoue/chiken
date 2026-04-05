@@ -16,38 +16,46 @@ import (
 )
 
 const (
-	defaultTheme        = portrait.WhiteTheme
-	defaultStyle        = portrait.BasicStyle
-	defaultFormat       = "png"
-	defaultEffect       = ""
-	defaultBackground   = "transparent"
-	defaultName         = ""
-	defaultMultiple     = 1
-	defaultDelay        = 0
-	defaultText         = ""
-	defaultTextColor    = "#ffffff"
-	defaultTextFontSize = 0
-	defaultTextFont     = "regular"
+	defaultTheme            = portrait.WhiteTheme
+	defaultStyle            = portrait.BasicStyle
+	defaultFormat           = "png"
+	defaultEffect           = ""
+	defaultBackground       = "transparent"
+	defaultName             = ""
+	defaultMultiple         = 1
+	defaultDelay            = 0
+	defaultText             = ""
+	// defaultTextColor is intentionally empty so that drawText defaults to white
+	// and drawBalloon defaults to black, giving readable text in both modes.
+	defaultTextColor        = ""
+	defaultTextFontSize     = 0
+	defaultTextFont         = "regular"
+	defaultBalloon          = false
+	defaultBalloonLineColor = "#000000"
+	defaultBalloonBgColor   = "#ffffff"
 )
 
 var (
-	theme        string
-	style        string
-	format       string
-	effect       string
-	background   string
-	name         string
-	text         string
-	textColor    string
-	textFontSize int
-	textFont     string
-	multiple     int
-	delay        int
-	verbose      bool
-	dump         bool
-	size         int
-	baseSize     = 32
-	out          io.Writer
+	theme            string
+	style            string
+	format           string
+	effect           string
+	background       string
+	name             string
+	text             string
+	textColor        string
+	textFontSize     int
+	textFont         string
+	multiple         int
+	delay            int
+	verbose          bool
+	dump             bool
+	balloon          bool
+	balloonLineColor string
+	balloonBgColor   string
+	size             int
+	baseSize         = 32
+	out              io.Writer
 )
 
 var rootCmd = &cobra.Command{
@@ -77,6 +85,9 @@ func init() {
 	rootCmd.Flags().IntVarP(&delay, "delay", "d", defaultDelay, "delay time for gif")
 	rootCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "printing verbose output")
 	rootCmd.Flags().BoolVar(&dump, "dump", false, "re encode from Args Example on README")
+	rootCmd.Flags().BoolVarP(&balloon, "balloon", "B", defaultBalloon, "display text in a speech balloon with 8-bit style")
+	rootCmd.Flags().StringVar(&balloonLineColor, "balloon-line-color", defaultBalloonLineColor, "balloon border color in hex format. example #000000")
+	rootCmd.Flags().StringVar(&balloonBgColor, "balloon-bg-color", defaultBalloonBgColor, "balloon background color in hex format. example #ffffff")
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 }
 
@@ -114,24 +125,36 @@ func output() error {
 }
 
 func encode(c *color.RGBA, tc *color.RGBA) error {
+	blc, err := cutil.HexToColor(balloonLineColor)
+	if err != nil {
+		return err
+	}
+	bbc, err := cutil.HexToColor(balloonBgColor)
+	if err != nil {
+		return err
+	}
+
 	p := portrait.NewPortrait(
 		portrait.Options{
-			Size:            size,
-			BaseSize:        baseSize,
-			Multiple:        multiple,
-			Style:           style,
-			Theme:           theme,
-			BackgroundColor: c,
-			Format:          format,
-			Effect:          effect,
-			Delay:           delay,
-			FileName:        fileName(),
-			Verbose:         verbose,
-			Output:          out,
-			Text:            text,
-			TextColor:       tc,
-			TextFontSize:    textFontSize,
-			TextFont:        textFont,
+			Size:               size,
+			BaseSize:           baseSize,
+			Multiple:           multiple,
+			Style:              style,
+			Theme:              theme,
+			BackgroundColor:    c,
+			Format:             format,
+			Effect:             effect,
+			Delay:              delay,
+			FileName:           fileName(),
+			Verbose:            verbose,
+			Output:             out,
+			Text:               text,
+			TextColor:          tc,
+			TextFontSize:       textFontSize,
+			TextFont:           textFont,
+			Balloon:            balloon,
+			BalloonBorderColor: blc,
+			BalloonFillColor:   bbc,
 		},
 	)
 
@@ -195,6 +218,15 @@ func printArgs() string {
 	}
 	if textFont != defaultTextFont {
 		args = append(args, fmt.Sprintf("--text-font=%s", textFont))
+	}
+	if balloon != defaultBalloon {
+		args = append(args, "--balloon")
+	}
+	if balloonLineColor != defaultBalloonLineColor {
+		args = append(args, fmt.Sprintf("--balloon-line-color=%s", balloonLineColor))
+	}
+	if balloonBgColor != defaultBalloonBgColor {
+		args = append(args, fmt.Sprintf("--balloon-bg-color=%s", balloonBgColor))
 	}
 	return strings.Join(args, " ")
 }
@@ -267,6 +299,9 @@ func reOutputs() error {
 			textFont = defaultTextFont
 			multiple = defaultMultiple
 			delay = defaultDelay
+			balloon = defaultBalloon
+			balloonLineColor = defaultBalloonLineColor
+			balloonBgColor = defaultBalloonBgColor
 
 			for _, v := range strings.Split(ss[2], " ") {
 				switch {
@@ -294,6 +329,12 @@ func reOutputs() error {
 					textFontSize = i
 				case strings.HasPrefix(v, "--text-font="):
 					textFont = strings.TrimPrefix(v, "--text-font=")
+				case v == "--balloon":
+					balloon = true
+				case strings.HasPrefix(v, "--balloon-line-color="):
+					balloonLineColor = strings.TrimPrefix(v, "--balloon-line-color=")
+				case strings.HasPrefix(v, "--balloon-bg-color="):
+					balloonBgColor = strings.TrimPrefix(v, "--balloon-bg-color=")
 				case strings.HasPrefix(v, "-m="):
 					i, err := strconv.Atoi(strings.TrimPrefix(v, "-m="))
 					if err != nil {

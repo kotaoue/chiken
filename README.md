@@ -87,3 +87,12 @@ The icon of kotaoue
 |![text_font_italic](img/text_font_italic.png)|-b=#1a1a1a -m=4 -n=text_font_italic -T=chiken -c=#ff0080 --text-font-size=20 --text-font=italic|chiken|#ff0080|20|italic|
 |![text_font_mono](img/text_font_mono.png)|-b=#1a1a1a -m=4 -n=text_font_mono -T=chiken -c=#ff0080 --text-font-size=20 --text-font=mono|chiken|#ff0080|20|mono|
 |![text_font_small-caps](img/text_font_small-caps.png)|-b=#1a1a1a -m=4 -n=text_font_small-caps -T=chiken -c=#ff0080 --text-font-size=20 --text-font=small-caps|chiken|#ff0080|20|small-caps|
+
+### With Balloon
+
+|image|args|text (-T)|balloon-line-color (--balloon-line-color)|balloon-bg-color (--balloon-bg-color)|
+|---|---|---|---|---|
+|![balloon_example](img/balloon_example.png)|-b=#1a1a1a -m=4 -n=balloon_example -T=Hello! -B|Hello!|(default: #000000)|(default: #ffffff)|
+|![balloon_custom](img/balloon_custom.png)|-b=#1a1a1a -m=4 -n=balloon_custom -T=chiken -B --balloon-line-color=#ff0080 --balloon-bg-color=#fff0f8|chiken|#ff0080|#fff0f8|
+|![balloon_fs20](img/balloon_fs20.png)|-b=#1a1a1a -m=4 -n=balloon_fs20 -T=chiken -B --text-font-size=20|chiken|(default: #000000)|(default: #ffffff)|
+|![balloon_brown](img/balloon_brown.png)|-t=brown -b=#1a1a1a -m=4 -n=balloon_brown -T=Cock-a-doodle-doo -B|Cock-a-doodle-doo|(default: #000000)|(default: #ffffff)|
