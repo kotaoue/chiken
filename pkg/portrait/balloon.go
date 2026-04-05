@@ -93,7 +93,9 @@ func (p *Portrait) drawBalloon(portrait *image.Paletted) image.Image {
 		fillColor = p.opt.BalloonFillColor
 	}
 
-	// Text color defaults to black (readable on white balloon)
+	// Text color defaults to black (readable on white balloon).
+	// A nil or fully-transparent TextColor means the user did not set a color,
+	// so we fall back to black. If the user explicitly sets a color, it is used.
 	var textColor color.Color = color.RGBA{R: 0, G: 0, B: 0, A: 255}
 	if p.opt.TextColor != nil && p.opt.TextColor.A != 0 {
 		textColor = p.opt.TextColor

@@ -25,6 +25,8 @@ const (
 	defaultMultiple         = 1
 	defaultDelay            = 0
 	defaultText             = ""
+	// defaultTextColor is intentionally empty so that drawText defaults to white
+	// and drawBalloon defaults to black, giving readable text in both modes.
 	defaultTextColor        = ""
 	defaultTextFontSize     = 0
 	defaultTextFont         = "regular"
