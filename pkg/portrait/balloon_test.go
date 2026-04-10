@@ -9,7 +9,6 @@ import (
 )
 
 func TestGenerateBalloonGrid(t *testing.T) {
-	// Test with border=1 (minimum)
 	border := 1
 	innerW := 20
 	innerH := 10
@@ -17,48 +16,55 @@ func TestGenerateBalloonGrid(t *testing.T) {
 
 	bodyW := innerW + border*2
 	bodyH := innerH + border*2
-	tailH := border * 4
-	totalH := bodyH + tailH
+	tailW := border * 4
+	tailH := border * 3
+	totalW := tailW + bodyW
 
-	assert.Equal(t, totalH, len(grid), "grid height should match bodyH + tailH")
+	assert.Equal(t, bodyH, len(grid), "grid height should equal bodyH")
 	for _, row := range grid {
-		assert.Equal(t, bodyW, len(row), "each grid row width should match bodyW")
+		assert.Equal(t, totalW, len(row), "each grid row width should match tailW+bodyW")
 	}
 
-	// Corners should be transparent (0)
+	// Body corners (body-local coords) should be transparent
 	cornerCut := border * 2
-	assert.Equal(t, 0, grid[0][0], "top-left corner should be transparent")
-	assert.Equal(t, 0, grid[0][bodyW-1], "top-right corner should be transparent")
-	assert.Equal(t, 0, grid[bodyH-1][0], "bottom-left corner should be transparent")
-	assert.Equal(t, 0, grid[bodyH-1][bodyW-1], "bottom-right corner should be transparent")
+	bodyX := tailW
+	assert.Equal(t, 0, grid[0][bodyX], "body top-left corner should be transparent")
+	assert.Equal(t, 0, grid[0][bodyX+bodyW-1], "body top-right corner should be transparent")
+	assert.Equal(t, 0, grid[bodyH-1][bodyX], "body bottom-left corner should be transparent")
+	assert.Equal(t, 0, grid[bodyH-1][bodyX+bodyW-1], "body bottom-right corner should be transparent")
 
 	// Inside corner cut area should be transparent
 	if cornerCut > 1 {
-		assert.Equal(t, 0, grid[0][1], "top-left inner corner should be transparent")
+		assert.Equal(t, 0, grid[0][bodyX+1], "body top-left inner corner should be transparent")
 	}
 
 	// Body border cells (non-corner) should be 1
-	assert.Equal(t, 1, grid[0][cornerCut], "top border should be 1")
-	assert.Equal(t, 1, grid[cornerCut][0], "left border should be 1")
+	assert.Equal(t, 1, grid[0][bodyX+cornerCut], "body top border should be 1")
+	assert.Equal(t, 1, grid[cornerCut][bodyX+bodyW-1], "body right border should be 1")
 
 	// Inner body cells should be fill (2)
-	assert.Equal(t, 2, grid[cornerCut][cornerCut], "inner body cell should be fill (2)")
+	assert.Equal(t, 2, grid[cornerCut][bodyX+cornerCut], "inner body cell should be fill (2)")
 
 	// Tail cells should be present (1 or 2) in tail area
-	tailX := cornerCut
+	tailY := (bodyH - tailH) / 2
 	tailFound := false
-	for y := bodyH; y < totalH; y++ {
-		for x := tailX; x < tailX+border*3 && x < bodyW; x++ {
+	for y := tailY; y < tailY+tailH; y++ {
+		for x := 0; x < tailW; x++ {
 			if grid[y][x] != 0 {
 				tailFound = true
 			}
 		}
 	}
 	assert.True(t, tailFound, "tail cells should be present")
+
+	// Tail left tip should be border color
+	assert.Equal(t, 1, grid[tailY][0], "tail left tip top row should be border (1)")
+
+	// Outside tail area should be transparent
+	assert.Equal(t, 0, grid[0][0], "above tail area should be transparent")
 }
 
 func TestGenerateBalloonGrid_Border2(t *testing.T) {
-	// Test with border=2 (2x multiple)
 	border := 2
 	innerW := 40
 	innerH := 20
@@ -66,25 +72,25 @@ func TestGenerateBalloonGrid_Border2(t *testing.T) {
 
 	bodyW := innerW + border*2
 	bodyH := innerH + border*2
-	tailH := border * 4
-	totalH := bodyH + tailH
+	tailW := border * 4
+	totalW := tailW + bodyW
 
-	assert.Equal(t, totalH, len(grid), "grid height should match bodyH + tailH")
+	assert.Equal(t, bodyH, len(grid), "grid height should equal bodyH")
 	for _, row := range grid {
-		assert.Equal(t, bodyW, len(row), "each grid row width should match bodyW")
+		assert.Equal(t, totalW, len(row), "each grid row width should match tailW+bodyW")
 	}
 
-	// Corners should be transparent
+	// Body corners should be transparent
 	cornerCut := border * 2
-	assert.Equal(t, 0, grid[0][0], "top-left corner should be transparent")
-	assert.Equal(t, 0, grid[0][cornerCut-1], "top-left inner corner should be transparent")
+	bodyX := tailW
+	assert.Equal(t, 0, grid[0][bodyX], "body top-left corner should be transparent")
+	assert.Equal(t, 0, grid[0][bodyX+cornerCut-1], "body top-left inner corner should be transparent")
 
-	// Non-corner top border should be 1
-	assert.Equal(t, 1, grid[0][cornerCut], "top border should be 1")
+	// Non-corner top body border should be 1
+	assert.Equal(t, 1, grid[0][bodyX+cornerCut], "body top border should be 1")
 
-	// Inner body cells should be fill (2) - use cornerCut offset to avoid corner-cut area
-	cornerCut2 := border * 2
-	assert.Equal(t, 2, grid[cornerCut2][cornerCut2], "inner body cell should be fill (2)")
+	// Inner body cells should be fill (2)
+	assert.Equal(t, 2, grid[cornerCut][bodyX+cornerCut], "inner body cell should be fill (2)")
 }
 
 func TestPortrait_DrawBalloon(t *testing.T) {

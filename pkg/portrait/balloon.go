@@ -15,27 +15,30 @@ type balloonParams struct {
 	cornerCut int
 	bodyW     int
 	bodyH     int
+	bodyX     int
 	tailW     int
 	tailH     int
-	tailX     int
-	totalH    int
+	tailY     int
+	totalW    int
 }
 
 func newBalloonParams(innerW, innerH, border int) balloonParams {
 	cornerCut := border * 2
 	bodyW := innerW + border*2
 	bodyH := innerH + border*2
-	tailW := border * 3
-	tailH := border * 4
+	tailW := border * 4
+	tailH := border * 3
+	tailY := (bodyH - tailH) / 2
 	return balloonParams{
 		border:    border,
 		cornerCut: cornerCut,
 		bodyW:     bodyW,
 		bodyH:     bodyH,
+		bodyX:     tailW,
 		tailW:     tailW,
 		tailH:     tailH,
-		tailX:     cornerCut,
-		totalH:    bodyH + tailH,
+		tailY:     tailY,
+		totalW:    tailW + bodyW,
 	}
 }
 
@@ -47,22 +50,22 @@ func allocGrid(rows, cols int) [][]int {
 	return grid
 }
 
-func isBodyCorner(x, y int, p balloonParams) bool {
-	return (x < p.cornerCut && y < p.cornerCut) ||
-		(x >= p.bodyW-p.cornerCut && y < p.cornerCut) ||
-		(x < p.cornerCut && y >= p.bodyH-p.cornerCut) ||
-		(x >= p.bodyW-p.cornerCut && y >= p.bodyH-p.cornerCut)
+func isBodyCorner(bx, y int, p balloonParams) bool {
+	return (bx < p.cornerCut && y < p.cornerCut) ||
+		(bx >= p.bodyW-p.cornerCut && y < p.cornerCut) ||
+		(bx < p.cornerCut && y >= p.bodyH-p.cornerCut) ||
+		(bx >= p.bodyW-p.cornerCut && y >= p.bodyH-p.cornerCut)
 }
 
-func isBodyEdge(x, y int, p balloonParams) bool {
-	return x < p.border || x >= p.bodyW-p.border || y < p.border || y >= p.bodyH-p.border
+func isBodyEdge(bx, y int, p balloonParams) bool {
+	return bx < p.border || bx >= p.bodyW-p.border || y < p.border || y >= p.bodyH-p.border
 }
 
-func bodyPixelValue(x, y int, p balloonParams) int {
-	if isBodyCorner(x, y, p) {
+func bodyPixelValue(bx, y int, p balloonParams) int {
+	if isBodyCorner(bx, y, p) {
 		return 0
 	}
-	if isBodyEdge(x, y, p) {
+	if isBodyEdge(bx, y, p) {
 		return 1
 	}
 	return 2
@@ -70,29 +73,31 @@ func bodyPixelValue(x, y int, p balloonParams) int {
 
 func fillBodyGrid(grid [][]int, p balloonParams) {
 	for y := 0; y < p.bodyH; y++ {
-		for x := 0; x < p.bodyW; x++ {
-			grid[y][x] = bodyPixelValue(x, y, p)
+		for bx := 0; bx < p.bodyW; bx++ {
+			grid[y][p.bodyX+bx] = bodyPixelValue(bx, y, p)
 		}
 	}
 }
 
 func openTailGap(grid [][]int, p balloonParams) {
-	for x := p.tailX + p.border; x < p.tailX+p.tailW-p.border && x < p.bodyW-p.cornerCut; x++ {
-		for y := p.bodyH - p.border; y < p.bodyH; y++ {
-			if grid[y][x] == 1 {
-				grid[y][x] = 2
+	for y := p.tailY + p.border; y < p.tailY+p.tailH-p.border; y++ {
+		for bx := 0; bx < p.border; bx++ {
+			if grid[y][p.bodyX+bx] == 1 {
+				grid[y][p.bodyX+bx] = 2
 			}
 		}
 	}
 }
 
 func isTailEdge(x, y int, p balloonParams) bool {
-	return x < p.tailX+p.border || x >= p.tailX+p.tailW-p.border || y >= p.totalH-p.border
+	return x < p.border ||
+		y < p.tailY+p.border ||
+		y >= p.tailY+p.tailH-p.border
 }
 
 func fillTailGrid(grid [][]int, p balloonParams) {
-	for y := p.bodyH; y < p.totalH; y++ {
-		for x := p.tailX; x < p.tailX+p.tailW && x < p.bodyW; x++ {
+	for y := p.tailY; y < p.tailY+p.tailH; y++ {
+		for x := 0; x < p.tailW; x++ {
 			if isTailEdge(x, y, p) {
 				grid[y][x] = 1
 			} else {
@@ -104,7 +109,7 @@ func fillTailGrid(grid [][]int, p balloonParams) {
 
 func generateBalloonGrid(innerW, innerH, border int) [][]int {
 	p := newBalloonParams(innerW, innerH, border)
-	grid := allocGrid(p.totalH, p.bodyW)
+	grid := allocGrid(p.bodyH, p.totalW)
 	fillBodyGrid(grid, p)
 	openTailGap(grid, p)
 	fillTailGrid(grid, p)
@@ -162,12 +167,12 @@ func balloonInnerSize(textWidth, textHeight, padding int) (int, int) {
 	return textWidth + padding*2, textHeight + padding*2
 }
 
-func newBalloonCanvas(portraitSize, gap, gridW, gridH int, bgColor color.Color, portrait *image.Paletted) *image.NRGBA {
+func newBalloonCanvas(portraitSize, balloonW, balloonH int, bgColor color.Color, portrait *image.Paletted) *image.NRGBA {
 	canvasH := portraitSize
-	if gridH > canvasH {
-		canvasH = gridH
+	if balloonH > canvasH {
+		canvasH = balloonH
 	}
-	canvas := image.NewNRGBA(image.Rect(0, 0, portraitSize+gap+gridW, canvasH))
+	canvas := image.NewNRGBA(image.Rect(0, 0, portraitSize+balloonW, canvasH))
 	draw.Draw(canvas, canvas.Bounds(), image.NewUniform(bgColor), image.Point{}, draw.Src)
 	draw.Draw(canvas, portrait.Bounds(), portrait, image.Point{}, draw.Over)
 	return canvas
@@ -191,9 +196,9 @@ func renderBalloonGrid(canvas *image.NRGBA, grid [][]int, bx, by int, palette []
 	}
 }
 
-func drawBalloonText(canvas *image.NRGBA, face font.Face, text string, bx, by, border, padding int, textColor color.Color) {
+func drawBalloonText(canvas *image.NRGBA, face font.Face, text string, bx, by, bodyX, border, padding int, textColor color.Color) {
 	metrics := face.Metrics()
-	textX := bx + border + padding
+	textX := bx + bodyX + border + padding
 	textY := by + border + padding + metrics.Ascent.Ceil()
 	d := &font.Drawer{
 		Dst:  canvas,
@@ -215,16 +220,16 @@ func (p *Portrait) drawBalloon(portrait *image.Paletted) image.Image {
 	textWidth, textHeight := measureBalloonText(face, p.opt.Text)
 	innerW, innerH := balloonInnerSize(textWidth, textHeight, padding)
 
+	params := newBalloonParams(innerW, innerH, border)
 	grid := generateBalloonGrid(innerW, innerH, border)
-	gridW, gridH := gridSize(grid)
+	balloonW, balloonH := gridSize(grid)
 
-	gap := padding
-	canvas := newBalloonCanvas(p.opt.Size, gap, gridW, gridH, p.opt.BackgroundColor, portrait)
+	canvas := newBalloonCanvas(p.opt.Size, balloonW, balloonH, p.opt.BackgroundColor, portrait)
 
 	palette := balloonColorPalette(balloonBorderColor(p.opt), balloonFillColor(p.opt))
-	bx := p.opt.Size + gap
-	renderBalloonGrid(canvas, grid, bx, 0, palette)
-	drawBalloonText(canvas, face, p.opt.Text, bx, 0, border, padding, balloonTextColor(p.opt))
+	balloonX := p.opt.Size
+	renderBalloonGrid(canvas, grid, balloonX, 0, palette)
+	drawBalloonText(canvas, face, p.opt.Text, balloonX, 0, params.bodyX, border, padding, balloonTextColor(p.opt))
 
 	return canvas
 }
