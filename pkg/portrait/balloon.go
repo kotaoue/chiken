@@ -10,137 +10,178 @@ import (
 	"golang.org/x/image/math/fixed"
 )
 
-// generateBalloonGrid creates a 2D pixel grid for an 8-bit-style speech balloon.
-// Grid values: 0=transparent, 1=border/line color, 2=fill/background color.
-// The body is a rounded rectangle with 8-bit corner cuts.
-// A rectangular tail extends downward from the bottom of the body.
-//
-//	innerW: inner content area width (pixels)
-//	innerH: inner content area height (pixels)
-//	border: border thickness (pixels)
-func generateBalloonGrid(innerW, innerH, border int) [][]int {
+type balloonParams struct {
+	border    int
+	cornerCut int
+	bodyW     int
+	bodyH     int
+	tailW     int
+	tailH     int
+	tailX     int
+	totalH    int
+}
+
+func newBalloonParams(innerW, innerH, border int) balloonParams {
 	cornerCut := border * 2
 	bodyW := innerW + border*2
 	bodyH := innerH + border*2
 	tailW := border * 3
 	tailH := border * 4
-	tailX := cornerCut
-	totalH := bodyH + tailH
-
-	grid := make([][]int, totalH)
-	for y := range grid {
-		grid[y] = make([]int, bodyW)
+	return balloonParams{
+		border:    border,
+		cornerCut: cornerCut,
+		bodyW:     bodyW,
+		bodyH:     bodyH,
+		tailW:     tailW,
+		tailH:     tailH,
+		tailX:     cornerCut,
+		totalH:    bodyH + tailH,
 	}
+}
 
-	// Draw body with 8-bit corner cuts
-	for y := 0; y < bodyH; y++ {
-		for x := 0; x < bodyW; x++ {
-			inCorner := (x < cornerCut && y < cornerCut) ||
-				(x >= bodyW-cornerCut && y < cornerCut) ||
-				(x < cornerCut && y >= bodyH-cornerCut) ||
-				(x >= bodyW-cornerCut && y >= bodyH-cornerCut)
-			if inCorner {
-				grid[y][x] = 0
-			} else if x < border || x >= bodyW-border || y < border || y >= bodyH-border {
-				grid[y][x] = 1
-			} else {
-				grid[y][x] = 2
-			}
+func allocGrid(rows, cols int) [][]int {
+	grid := make([][]int, rows)
+	for y := range grid {
+		grid[y] = make([]int, cols)
+	}
+	return grid
+}
+
+func isBodyCorner(x, y int, p balloonParams) bool {
+	return (x < p.cornerCut && y < p.cornerCut) ||
+		(x >= p.bodyW-p.cornerCut && y < p.cornerCut) ||
+		(x < p.cornerCut && y >= p.bodyH-p.cornerCut) ||
+		(x >= p.bodyW-p.cornerCut && y >= p.bodyH-p.cornerCut)
+}
+
+func isBodyEdge(x, y int, p balloonParams) bool {
+	return x < p.border || x >= p.bodyW-p.border || y < p.border || y >= p.bodyH-p.border
+}
+
+func bodyPixelValue(x, y int, p balloonParams) int {
+	if isBodyCorner(x, y, p) {
+		return 0
+	}
+	if isBodyEdge(x, y, p) {
+		return 1
+	}
+	return 2
+}
+
+func fillBodyGrid(grid [][]int, p balloonParams) {
+	for y := 0; y < p.bodyH; y++ {
+		for x := 0; x < p.bodyW; x++ {
+			grid[y][x] = bodyPixelValue(x, y, p)
 		}
 	}
+}
 
-	// Open the bottom border where the tail connects (inner area only)
-	for x := tailX + border; x < tailX+tailW-border && x < bodyW-cornerCut; x++ {
-		for y := bodyH - border; y < bodyH; y++ {
+func openTailGap(grid [][]int, p balloonParams) {
+	for x := p.tailX + p.border; x < p.tailX+p.tailW-p.border && x < p.bodyW-p.cornerCut; x++ {
+		for y := p.bodyH - p.border; y < p.bodyH; y++ {
 			if grid[y][x] == 1 {
 				grid[y][x] = 2
 			}
 		}
 	}
+}
 
-	// Draw tail
-	for y := bodyH; y < totalH; y++ {
-		for x := tailX; x < tailX+tailW && x < bodyW; x++ {
-			isLeftEdge := x < tailX+border
-			isRightEdge := x >= tailX+tailW-border
-			isBottomEdge := y >= totalH-border
-			if isLeftEdge || isRightEdge || isBottomEdge {
+func isTailEdge(x, y int, p balloonParams) bool {
+	return x < p.tailX+p.border || x >= p.tailX+p.tailW-p.border || y >= p.totalH-p.border
+}
+
+func fillTailGrid(grid [][]int, p balloonParams) {
+	for y := p.bodyH; y < p.totalH; y++ {
+		for x := p.tailX; x < p.tailX+p.tailW && x < p.bodyW; x++ {
+			if isTailEdge(x, y, p) {
 				grid[y][x] = 1
 			} else {
 				grid[y][x] = 2
 			}
 		}
 	}
+}
 
+func generateBalloonGrid(innerW, innerH, border int) [][]int {
+	p := newBalloonParams(innerW, innerH, border)
+	grid := allocGrid(p.totalH, p.bodyW)
+	fillBodyGrid(grid, p)
+	openTailGap(grid, p)
+	fillTailGrid(grid, p)
 	return grid
 }
 
-// drawBalloon renders a speech balloon containing the text, placed to the right of the portrait.
-// Default balloon colors: black border, white fill.
-func (p *Portrait) drawBalloon(portrait *image.Paletted) image.Image {
-	face := p.newFontFace()
-	if closer, ok := face.(io.Closer); ok {
-		defer closer.Close()
+func gridSize(grid [][]int) (int, int) {
+	h := len(grid)
+	if h == 0 {
+		return 0, 0
 	}
+	return len(grid[0]), h
+}
 
-	// Balloon colors: default black border, white fill
-	var borderColor color.Color = color.RGBA{R: 0, G: 0, B: 0, A: 255}
-	var fillColor color.Color = color.RGBA{R: 255, G: 255, B: 255, A: 255}
-	if p.opt.BalloonBorderColor != nil {
-		borderColor = p.opt.BalloonBorderColor
+func balloonBorderColor(opt Options) color.Color {
+	if opt.BalloonBorderColor != nil {
+		return opt.BalloonBorderColor
 	}
-	if p.opt.BalloonFillColor != nil {
-		fillColor = p.opt.BalloonFillColor
-	}
+	return color.RGBA{R: 0, G: 0, B: 0, A: 255}
+}
 
-	// Text color defaults to black (readable on white balloon).
-	// A nil or fully-transparent TextColor means the user did not set a color,
-	// so we fall back to black. If the user explicitly sets a color, it is used.
-	var textColor color.Color = color.RGBA{R: 0, G: 0, B: 0, A: 255}
-	if p.opt.TextColor != nil && p.opt.TextColor.A != 0 {
-		textColor = p.opt.TextColor
+func balloonFillColor(opt Options) color.Color {
+	if opt.BalloonFillColor != nil {
+		return opt.BalloonFillColor
 	}
+	return color.RGBA{R: 255, G: 255, B: 255, A: 255}
+}
 
+func balloonTextColor(opt Options) color.Color {
+	if opt.TextColor != nil && opt.TextColor.A != 0 {
+		return opt.TextColor
+	}
+	return color.RGBA{R: 0, G: 0, B: 0, A: 255}
+}
+
+func balloonBorderThickness(multiple int) int {
+	if multiple < 1 {
+		return 1
+	}
+	return multiple
+}
+
+func balloonPadding(border int) int {
+	return border * 4
+}
+
+func measureBalloonText(face font.Face, text string) (int, int) {
 	metrics := face.Metrics()
-	textWidth := font.MeasureString(face, p.opt.Text).Ceil()
+	textWidth := font.MeasureString(face, text).Ceil()
 	textHeight := (metrics.Ascent + metrics.Descent).Ceil()
+	return textWidth, textHeight
+}
 
-	border := p.opt.Multiple
-	if border < 1 {
-		border = 1
-	}
-	padding := border * 4
+func balloonInnerSize(textWidth, textHeight, padding int) (int, int) {
+	return textWidth + padding*2, textHeight + padding*2
+}
 
-	innerW := textWidth + padding*2
-	innerH := textHeight + padding*2
-
-	grid := generateBalloonGrid(innerW, innerH, border)
-	gridH := len(grid)
-	gridW := 0
-	if gridH > 0 {
-		gridW = len(grid[0])
-	}
-
-	gap := padding
-	canvasW := p.opt.Size + gap + gridW
-	canvasH := p.opt.Size
+func newBalloonCanvas(portraitSize, gap, gridW, gridH int, bgColor color.Color, portrait *image.Paletted) *image.NRGBA {
+	canvasH := portraitSize
 	if gridH > canvasH {
 		canvasH = gridH
 	}
-
-	canvas := image.NewNRGBA(image.Rect(0, 0, canvasW, canvasH))
-	draw.Draw(canvas, canvas.Bounds(), image.NewUniform(p.opt.BackgroundColor), image.Point{}, draw.Src)
+	canvas := image.NewNRGBA(image.Rect(0, 0, portraitSize+gap+gridW, canvasH))
+	draw.Draw(canvas, canvas.Bounds(), image.NewUniform(bgColor), image.Point{}, draw.Src)
 	draw.Draw(canvas, portrait.Bounds(), portrait, image.Point{}, draw.Over)
+	return canvas
+}
 
-	// Render balloon grid
-	palette := []color.Color{
-		color.RGBA{0, 0, 0, 0}, // 0: transparent
-		borderColor,             // 1: border
-		fillColor,               // 2: fill
+func balloonColorPalette(border, fill color.Color) []color.Color {
+	return []color.Color{
+		color.RGBA{A: 0},
+		border,
+		fill,
 	}
+}
 
-	bx := p.opt.Size + gap
-	by := 0
+func renderBalloonGrid(canvas *image.NRGBA, grid [][]int, bx, by int, palette []color.Color) {
 	for y, row := range grid {
 		for x, v := range row {
 			if v != 0 {
@@ -148,18 +189,42 @@ func (p *Portrait) drawBalloon(portrait *image.Paletted) image.Image {
 			}
 		}
 	}
+}
 
-	// Draw text inside balloon body
+func drawBalloonText(canvas *image.NRGBA, face font.Face, text string, bx, by, border, padding int, textColor color.Color) {
+	metrics := face.Metrics()
 	textX := bx + border + padding
 	textY := by + border + padding + metrics.Ascent.Ceil()
-
 	d := &font.Drawer{
 		Dst:  canvas,
 		Src:  image.NewUniform(textColor),
 		Face: face,
 		Dot:  fixed.P(textX, textY),
 	}
-	d.DrawString(p.opt.Text)
+	d.DrawString(text)
+}
+
+func (p *Portrait) drawBalloon(portrait *image.Paletted) image.Image {
+	face := p.newFontFace()
+	if closer, ok := face.(io.Closer); ok {
+		defer closer.Close()
+	}
+
+	border := balloonBorderThickness(p.opt.Multiple)
+	padding := balloonPadding(border)
+	textWidth, textHeight := measureBalloonText(face, p.opt.Text)
+	innerW, innerH := balloonInnerSize(textWidth, textHeight, padding)
+
+	grid := generateBalloonGrid(innerW, innerH, border)
+	gridW, gridH := gridSize(grid)
+
+	gap := padding
+	canvas := newBalloonCanvas(p.opt.Size, gap, gridW, gridH, p.opt.BackgroundColor, portrait)
+
+	palette := balloonColorPalette(balloonBorderColor(p.opt), balloonFillColor(p.opt))
+	bx := p.opt.Size + gap
+	renderBalloonGrid(canvas, grid, bx, 0, palette)
+	drawBalloonText(canvas, face, p.opt.Text, bx, 0, border, padding, balloonTextColor(p.opt))
 
 	return canvas
 }
