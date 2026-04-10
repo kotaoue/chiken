@@ -16,8 +16,8 @@ func TestGenerateBalloonGrid(t *testing.T) {
 
 	bodyW := innerW + border*2
 	bodyH := innerH + border*2
-	tailW := border * 4
-	tailH := border * 3
+	tailW := border * 2
+	tailH := tailW*2 - 1
 	totalW := tailW + bodyW
 
 	assert.Equal(t, bodyH, len(grid), "grid height should equal bodyH")
@@ -57,8 +57,10 @@ func TestGenerateBalloonGrid(t *testing.T) {
 	}
 	assert.True(t, tailFound, "tail cells should be present")
 
-	// Tail left tip should be border color
-	assert.Equal(t, 1, grid[tailY][0], "tail left tip top row should be border (1)")
+	// Tail tip (single pixel at leftmost column, mid row) should be border color
+	midY := tailY + tailH/2
+	assert.Equal(t, 1, grid[midY][0], "tail tip should be border (1)")
+	assert.Equal(t, 0, grid[tailY][0], "above tail tip should be transparent")
 
 	// Outside tail area should be transparent
 	assert.Equal(t, 0, grid[0][0], "above tail area should be transparent")
@@ -72,7 +74,7 @@ func TestGenerateBalloonGrid_Border2(t *testing.T) {
 
 	bodyW := innerW + border*2
 	bodyH := innerH + border*2
-	tailW := border * 4
+	tailW := border * 2
 	totalW := tailW + bodyW
 
 	assert.Equal(t, bodyH, len(grid), "grid height should equal bodyH")

@@ -26,8 +26,8 @@ func newBalloonParams(innerW, innerH, border int) balloonParams {
 	cornerCut := border * 2
 	bodyW := innerW + border*2
 	bodyH := innerH + border*2
-	tailW := border * 4
-	tailH := border * 3
+	tailW := border * 2
+	tailH := tailW*2 - 1
 	tailY := (bodyH - tailH) / 2
 	return balloonParams{
 		border:    border,
@@ -89,19 +89,42 @@ func openTailGap(grid [][]int, p balloonParams) {
 	}
 }
 
-func isTailEdge(x, y int, p balloonParams) bool {
-	return x < p.border ||
-		y < p.tailY+p.border ||
-		y >= p.tailY+p.tailH-p.border
+func tailMidY(p balloonParams) int {
+	return p.tailY + p.tailH/2
+}
+
+func tailHalfSpan(x int) int {
+	return x
+}
+
+func isTailPixel(x, y int, p balloonParams) bool {
+	mid := tailMidY(p)
+	half := tailHalfSpan(x)
+	return y >= mid-half && y <= mid+half
+}
+
+func isTailBorderPixel(x, y int, p balloonParams) bool {
+	mid := tailMidY(p)
+	half := tailHalfSpan(x)
+	return y < mid-half+p.border || y > mid+half-p.border
+}
+
+func tailPixelValue(x, y int, p balloonParams) int {
+	if !isTailPixel(x, y, p) {
+		return 0
+	}
+	if isTailBorderPixel(x, y, p) {
+		return 1
+	}
+	return 2
 }
 
 func fillTailGrid(grid [][]int, p balloonParams) {
 	for y := p.tailY; y < p.tailY+p.tailH; y++ {
 		for x := 0; x < p.tailW; x++ {
-			if isTailEdge(x, y, p) {
-				grid[y][x] = 1
-			} else {
-				grid[y][x] = 2
+			v := tailPixelValue(x, y, p)
+			if v != 0 {
+				grid[y][x] = v
 			}
 		}
 	}
