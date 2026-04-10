@@ -7,6 +7,16 @@
 
 The icon of kotaoue
 
+## Usage
+
+```shell
+# basic
+go run .
+
+# walk style
+go run . -s=walk
+```
+
 ## Args Example
 
 |image|args|theme|style|
