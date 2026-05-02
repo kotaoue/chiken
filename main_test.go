@@ -46,6 +46,9 @@ func testWithFlags(t *testing.T, args []string, testFunc func() error) {
 	cmd.Flags().IntVarP(&delay, "delay", "d", defaultDelay, "delay time for gif")
 	cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "printing verbose output")
 	cmd.Flags().BoolVar(&dump, "dump", false, "re encode from Args Example on README")
+	cmd.Flags().BoolVarP(&balloon, "balloon", "B", defaultBalloon, "display text in a speech balloon with 8-bit style")
+	cmd.Flags().StringVar(&balloonLineColor, "balloon-line-color", defaultBalloonLineColor, "balloon border color in hex format. example #000000")
+	cmd.Flags().StringVar(&balloonBgColor, "balloon-bg-color", defaultBalloonBgColor, "balloon background color in hex format. example #ffffff")
 
 	// Reset flags to defaults
 	theme = defaultTheme
@@ -62,6 +65,9 @@ func testWithFlags(t *testing.T, args []string, testFunc func() error) {
 	delay = defaultDelay
 	verbose = false
 	dump = false
+	balloon = defaultBalloon
+	balloonLineColor = defaultBalloonLineColor
+	balloonBgColor = defaultBalloonBgColor
 
 	// Parse flags
 	cmd.SetArgs(args[1:])
@@ -209,6 +215,35 @@ func TestEncodeWithTextFont(t *testing.T) {
 			})
 		})
 	}
+}
+
+func TestEncodeWithBalloon(t *testing.T) {
+	bgColor := &color.RGBA{R: 0, G: 0, B: 0, A: 255}
+	tcColor := &color.RGBA{R: 0, G: 0, B: 0, A: 255}
+
+	// Test balloon mode with text
+	testWithFlags(t, []string{"chiken", "-f", "png", "-T", "Hello!", "-B", "-n", "test_balloon"}, func() error {
+		defer os.Remove("img/test_balloon.png")
+		err := encode(bgColor, tcColor)
+		assert.NoError(t, err, "encode() for png with balloon should not fail")
+		return nil
+	})
+
+	// Test balloon with custom colors
+	testWithFlags(t, []string{"chiken", "-f", "png", "-T", "Cock-a-doodle-doo!", "-B", "--balloon-line-color=#ff0000", "--balloon-bg-color=#ffff00", "-n", "test_balloon_color"}, func() error {
+		defer os.Remove("img/test_balloon_color.png")
+		err := encode(bgColor, tcColor)
+		assert.NoError(t, err, "encode() for png with colored balloon should not fail")
+		return nil
+	})
+
+	// Test balloon with multiple factor
+	testWithFlags(t, []string{"chiken", "-f", "png", "-T", "2x size!", "-B", "-m", "2", "-n", "test_balloon_2x"}, func() error {
+		defer os.Remove("img/test_balloon_2x.png")
+		err := encode(bgColor, tcColor)
+		assert.NoError(t, err, "encode() for png with balloon at 2x should not fail")
+		return nil
+	})
 }
 
 func TestPrintReference(t *testing.T) {

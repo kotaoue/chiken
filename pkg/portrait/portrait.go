@@ -33,22 +33,25 @@ type Portrait struct {
 }
 
 type Options struct {
-	Size            int
-	BaseSize        int
-	Multiple        int
-	Style           string
-	Theme           string
-	Effect          string
-	BackgroundColor *color.RGBA
-	Format          string
-	Delay           int
-	FileName        string
-	Verbose         bool
-	Output          io.Writer
-	Text            string
-	TextColor       *color.RGBA
-	TextFontSize    int
-	TextFont        string
+	Size               int
+	BaseSize           int
+	Multiple           int
+	Style              string
+	Theme              string
+	Effect             string
+	BackgroundColor    *color.RGBA
+	Format             string
+	Delay              int
+	FileName           string
+	Verbose            bool
+	Output             io.Writer
+	Text               string
+	TextColor          *color.RGBA
+	TextFontSize       int
+	TextFont           string
+	Balloon            bool
+	BalloonBorderColor *color.RGBA
+	BalloonFillColor   *color.RGBA
 }
 
 func NewPortrait(o Options) *Portrait {
@@ -73,7 +76,9 @@ func (p *Portrait) encodePng() error {
 	}
 
 	var finalImg image.Image = img
-	if p.opt.Text != "" {
+	if p.opt.Balloon && p.opt.Text != "" {
+		finalImg = p.drawBalloon(img)
+	} else if p.opt.Text != "" {
 		finalImg = p.drawText(img)
 	}
 
