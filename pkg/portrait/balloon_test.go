@@ -1,6 +1,7 @@
 package portrait
 
 import (
+	"image"
 	"image/color"
 	"io"
 	"testing"
@@ -173,4 +174,26 @@ func TestPortrait_Balloon_NotUsedWithoutText(t *testing.T) {
 	p := NewPortrait(opts)
 	err := p.Encode()
 	assert.NoError(t, err, "Portrait.Encode() with balloon but no text should not fail")
+}
+
+func TestGridSize_Empty(t *testing.T) {
+	w, h := gridSize([][]int{})
+	assert.Equal(t, 0, w)
+	assert.Equal(t, 0, h)
+}
+
+func TestBalloonBorderThickness_Zero(t *testing.T) {
+	assert.Equal(t, 1, balloonBorderThickness(0))
+	assert.Equal(t, 1, balloonBorderThickness(-1))
+}
+
+func TestNewBalloonCanvas_BalloonTallerThanPortrait(t *testing.T) {
+	portraitSize := 32
+	balloonW := 50
+	balloonH := 100 // taller than portraitSize
+	bgColor := color.RGBA{R: 0, G: 0, B: 0, A: 255}
+	portrait := image.NewPaletted(image.Rect(0, 0, portraitSize, portraitSize), color.Palette{color.Transparent})
+	canvas := newBalloonCanvas(portraitSize, balloonW, balloonH, bgColor, portrait)
+	assert.Equal(t, portraitSize+balloonW, canvas.Bounds().Dx())
+	assert.Equal(t, balloonH, canvas.Bounds().Dy())
 }
